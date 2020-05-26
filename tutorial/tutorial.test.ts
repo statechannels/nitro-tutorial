@@ -5,6 +5,10 @@ import {
   getTestProvider,
   setupContracts,
   randomChannelId,
+  State,
+  Outcome,
+  getVariablePart,
+  getFixedPart,
 } from "@statechannels/nitro-protocol";
 const getDepositedEvent = (events) =>
   events.find(({ event }) => event === "Deposited").args;
@@ -104,5 +108,40 @@ describe("Tutorial", () => {
       amountDeposited: held,
       destinationHoldings: held,
     });
+  });
+
+  it("Lesson 3: Form a State with the correct format", async () => {
+    const participants = [];
+    for (let i = 0; i < 3; i++) {
+      participants[i] = Wallet.createRandom().address;
+    }
+    const chainId = "0x1234";
+    const channelNonce = bigNumberify(0).toHexString();
+    const channel: Channel = { chainId, channelNonce, participants };
+
+    const outcome: Outcome = [
+      {
+        allocationItems: [],
+        assetHolderAddress: Wallet.createRandom().address,
+      },
+    ];
+
+    const state: State = {
+      turnNum: 0,
+      isFinal: true, // FIXME
+      channel,
+      challengeDuration: 1,
+      outcome,
+      appDefinition: "0x0",
+      appData: "0x0",
+    };
+
+    expect(state.isFinal).toBeFalsy;
+
+    const fixedPart = getFixedPart(state);
+    const variablePart = getVariablePart(state);
+
+    expect(fixedPart).toBeTruthy;
+    expect(variablePart).toBeTruthy;
   });
 });
