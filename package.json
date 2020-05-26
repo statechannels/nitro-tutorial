@@ -6,7 +6,7 @@
   "author": "George Knee",
   "license": "MIT",
   "private": true,
-  "dependencies": {
+  "devDependencies": {
     "@statechannels/devtools": "0.1.0",
     "@statechannels/nitro-protocol": "../monorepo/packages/nitro-protocol",
     "etherlime": "^2.3.3",
@@ -17,6 +17,5 @@
   "scripts": {
     "contract:compile": "node ./bin/compile.js",
     "tutorial": "jest -c ./jest/jest.tutorial.config.js --watch"
-  },
-  "devDependencies": {}
+  }
 }
