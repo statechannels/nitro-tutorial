@@ -7,11 +7,16 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@statechannels/nitro-protocol": "../monorepo/packages/nitro-protocol"
-  },
-  "devDependencies": {
-    "@statechannels/devtools": "^0.1.0",
+    "@statechannels/devtools": "0.1.0",
+    "@statechannels/nitro-protocol": "../monorepo/packages/nitro-protocol",
     "etherlime": "^2.3.3",
-    "jest": "^26.0.1"
-  }
+    "etherlime-lib": "^1.2.3",
+    "jest": "^26.0.1",
+    "ts-jest": "^26.0.0"
+  },
+  "scripts": {
+    "contract:compile": "node ./bin/compile.js",
+    "tutorial": "jest -c ./jest/jest.tutorial.config.js --watch"
+  },
+  "devDependencies": {}
 }
