@@ -9,8 +9,10 @@
   "devDependencies": {
     "@statechannels/devtools": "0.1.0",
     "@statechannels/nitro-protocol": "../monorepo/packages/nitro-protocol",
+    "@types/jest": "^25.2.3",
     "etherlime": "^2.3.3",
     "etherlime-lib": "^1.2.3",
+    "ethers": "4.0.45",
     "jest": "^26.0.1",
     "ts-jest": "^26.0.0"
   },
