@@ -1,10 +1,10 @@
 module.exports = {
-  globalSetup: "./contract-test-setup.ts",
-  globalTeardown: "./contract-test-teardown.ts",
-  collectCoverageFrom: ["**/*.{js,jsx,ts,tsx}"],
-  reporters: ["default"],
-  testMatch: ["../tutorial/**/*.test.ts"],
+  globalSetup: "<rootDir>/jest/contract-test-setup.ts",
+  globalTeardown: "<rootDir>/jest/contract-test-teardown.ts",
+  testMatch: ["**/*.ts"],
   testEnvironment: "node",
   testURL: "http://localhost",
   preset: "ts-jest",
+  rootDir: "..",
+  roots: ["tutorial"],
 };
