@@ -9,6 +9,7 @@ import {
   Outcome,
   getVariablePart,
   getFixedPart,
+  validTransition,
 } from "@statechannels/nitro-protocol";
 const getDepositedEvent = (events) =>
   events.find(({ event }) => event === "Deposited").args;
@@ -20,6 +21,7 @@ const {
   EthAssetHolderArtifact,
 } = require("@statechannels/nitro-protocol").ContractArtifacts;
 let ETHAssetHolder: Contract;
+let NitroAdjudicator: Contract;
 
 // Import state channels utilities
 import { Channel, getChannelId } from "@statechannels/nitro-protocol";
@@ -31,6 +33,11 @@ beforeAll(async () => {
     provider,
     EthAssetHolderArtifact,
     process.env.ETH_ASSET_HOLDER_ADDRESS
+  );
+  NitroAdjudicator = await setupContracts(
+    provider,
+    EthAssetHolderArtifact,
+    process.env.NITRO_ADJUDICATOR_ADDRESS
   );
 });
 
@@ -119,12 +126,7 @@ describe("Tutorial", () => {
     const channelNonce = bigNumberify(0).toHexString();
     const channel: Channel = { chainId, channelNonce, participants };
 
-    const outcome: Outcome = [
-      {
-        allocationItems: [],
-        assetHolderAddress: Wallet.createRandom().address,
-      },
-    ];
+    const outcome: Outcome = [];
 
     const state: State = {
       turnNum: 0,
@@ -143,5 +145,37 @@ describe("Tutorial", () => {
 
     expect(fixedPart).toBeTruthy;
     expect(variablePart).toBeTruthy;
+  });
+
+  it("Lesson 4: Conform to an on chain validTransition function", async () => {
+    const channel: Channel = {
+      participants: [
+        Wallet.createRandom().address,
+        Wallet.createRandom().address,
+      ],
+      chainId: "0x1",
+      channelNonce: "0x1",
+    };
+
+    const fromState: State = {
+      channel,
+      outcome: [],
+      turnNum: 1,
+      isFinal: false,
+      challengeDuration: 0x0,
+      appDefinition: process.env.TRIVIAL_APP_ADDRESS,
+      appData: "0x0",
+    };
+    const toState: State = { ...fromState, turnNum: 3 }; // FIXME
+
+    expect(
+      await NitroAdjudicator.validTransition(
+        channel.participants.length,
+        [fromState.isFinal, toState.isFinal],
+        [getVariablePart(fromState), getVariablePart(toState)],
+        toState.turnNum,
+        fromState.appDefinition
+      )
+    ).toBe(true);
   });
 });
