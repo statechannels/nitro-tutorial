@@ -1,0 +1,17 @@
+{
+  "name": "nitro-tutorial",
+  "version": "0.1.0",
+  "description": "Provides a dev environment for interacting with @statechannels/nitro-protocol contracts.",
+  "main": "index.ts",
+  "author": "George Knee",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@statechannels/nitro-protocol": "../monorepo/packages/nitro-protocol"
+  },
+  "devDependencies": {
+    "@statechannels/devtools": "^0.1.0",
+    "etherlime": "^2.3.3",
+    "jest": "^26.0.1"
+  }
+}
