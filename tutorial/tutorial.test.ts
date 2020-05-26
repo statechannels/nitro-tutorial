@@ -26,7 +26,7 @@ beforeAll(async () => {
   ETHAssetHolder = await setupContracts(
     provider,
     EthAssetHolderArtifact,
-    process.env.TEST_ETH_ASSET_HOLDER_ADDRESS
+    process.env.ETH_ASSET_HOLDER_ADDRESS
   );
 });
 
@@ -58,15 +58,15 @@ describe("Tutorial", () => {
     */
     const channelNonce = bigNumberify(0).toHexString();
 
-    const channelId = "fixme"; // FIX ME
+    // const channelId = "fixme"; // FIX ME
 
     /* 
       Uncomment the lines below to use the imported helper function to compute the channel id.
       Feel free to take a look at the implementation of that helper 
     */
 
-    // const channel: Channel = {chainId, channelNonce, participants};
-    // const channelId = getChannelId(channel);
+    const channel: Channel = { chainId, channelNonce, participants };
+    const channelId = getChannelId(channel);
 
     /* 
       Expectations around the format of the channel Id:
@@ -75,7 +75,7 @@ describe("Tutorial", () => {
     expect(channelId).toHaveLength(66);
   });
 
-  it("Lesson 2: depositing into an asset holder", async () => {
+  it("Lesson 2: depositing into the ETH asset holder", async () => {
     /*
       Get an appropriate representation of 1 wei, and
       use one of our helpers to quickly create a random channel id
@@ -87,7 +87,7 @@ describe("Tutorial", () => {
       Attempt to deposit 1 wei against the channel id we created.
       Inspect the error message in the console for a hint about the bug on the next line 
     */
-    const tx0 = ETHAssetHolder.deposit(channelId, held, held, {
+    const tx0 = ETHAssetHolder.deposit(channelId, 0, held, {
       value: held,
     }); // FIXME
 
@@ -101,8 +101,8 @@ describe("Tutorial", () => {
     expect(await ETHAssetHolder.holdings(channelId)).toEqual(held);
     expect(depositedEvent).toMatchObject({
       channelId,
-      amountDeposited: bigNumberify(held),
-      destinationHoldings: bigNumberify(held),
+      amountDeposited: held,
+      destinationHoldings: held,
     });
   });
 });

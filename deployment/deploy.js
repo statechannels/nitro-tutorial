@@ -12,14 +12,14 @@ const deploy = async () => {
     NitroAdjudicatorArtifact
   );
 
-  const TEST_ETH_ASSET_HOLDER_ADDRESS = await deployer.deploy(
+  const ETH_ASSET_HOLDER_ADDRESS = await deployer.deploy(
     EthAssetHolderArtifact,
     {},
     NITRO_ADJUDICATOR_ADDRESS
   );
   return {
     NITRO_ADJUDICATOR_ADDRESS,
-    TEST_ETH_ASSET_HOLDER_ADDRESS,
+    ETH_ASSET_HOLDER_ADDRESS,
   };
 };
 
