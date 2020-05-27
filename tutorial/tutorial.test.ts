@@ -12,6 +12,7 @@ import {
   validTransition,
   signState,
   hashOutcome,
+  SignedState,
 } from "@statechannels/nitro-protocol";
 const getDepositedEvent = (events) =>
   events.find(({ event }) => event === "Deposited").args;
@@ -35,6 +36,7 @@ import { HashZero, AddressZero } from "ethers/constants";
 
 // TODO hoist these up to the module export in nitro-protocol
 import { hashAppPart } from "@statechannels/nitro-protocol/lib/src/contract/state";
+import { signChallengeMessage } from "@statechannels/nitro-protocol/lib/src/signatures";
 
 // Set up an interface to the deployed Asset Holder Contract
 beforeAll(async () => {
@@ -281,6 +283,59 @@ describe("Tutorial", () => {
       numStates,
       whoSignedWhat,
       sigs
+    );
+    await (await tx).wait();
+  });
+
+  it("Lesson 7: Register a challenge using forceMove", async () => {
+    const largestTurnNum = 8;
+    const isFinalCount = 0;
+    const participants = [];
+    const wallets: Wallet[] = [];
+    for (let i = 0; i < 3; i++) {
+      wallets[i] = Wallet.createRandom();
+      participants[i] = wallets[i].address;
+    }
+    const chainId = "0x1234";
+    const channelNonce = bigNumberify(0).toHexString();
+    const channel: Channel = { chainId, channelNonce, participants };
+
+    const appDatas = [0, 1, 2];
+    const whoSignedWhat = [0, 1, 2];
+
+    const states: State[] = appDatas.map((data, idx) => ({
+      turnNum: largestTurnNum - appDatas.length + 1 + idx,
+      isFinal: idx > appDatas.length - isFinalCount,
+      channel,
+      challengeDuration: 1,
+      outcome: [],
+      appDefinition: process.env.TRIVIAL_APP_ADDRESS,
+      appData: HashZero,
+    }));
+    const variableParts = states.map((state) => getVariablePart(state));
+    const fixedPart = getFixedPart(states[0]);
+
+    const challenger = wallets[0];
+
+    // Sign the states
+    const signatures = await signStates(states, wallets, whoSignedWhat);
+    const challengeState: SignedState = {
+      state: states[states.length - 1],
+      signature: { v: 0, r: "", s: "" },
+    };
+    const challengeSignature = signChallengeMessage(
+      [challengeState],
+      challenger.privateKey
+    );
+
+    const tx = NitroAdjudicator.forceMove(
+      fixedPart,
+      largestTurnNum,
+      variableParts,
+      isFinalCount,
+      signatures,
+      whoSignedWhat,
+      challengeSignature
     );
     await (await tx).wait();
   });
