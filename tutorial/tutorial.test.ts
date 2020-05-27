@@ -190,7 +190,7 @@ describe("Tutorial", () => {
     const whoSignedWhat = [0, 1, 2];
     const largestTurnNum = 2;
     const participants = [];
-    const wallets = [];
+    const wallets: Wallet[] = [];
     for (let i = 0; i < 3; i++) {
       wallets[i] = Wallet.createRandom();
       participants[i] = wallets[i].address;
@@ -202,7 +202,7 @@ describe("Tutorial", () => {
     const states: State[] = [];
     for (let i = 1; i <= numStates; i++) {
       states.push({
-        isFinal: true,
+        isFinal: false,
         channel,
         outcome: [],
         appDefinition: AddressZero,
