@@ -1,6 +1,6 @@
 // Import Ethereum utilities
 import { Contract, Wallet } from "ethers";
-import { bigNumberify, parseUnits } from "ethers/utils";
+import { bigNumberify, parseUnits, id } from "ethers/utils";
 import {
   getTestProvider,
   setupContracts,
@@ -10,6 +10,7 @@ import {
   getVariablePart,
   getFixedPart,
   validTransition,
+  signState,
 } from "@statechannels/nitro-protocol";
 const getDepositedEvent = (events) =>
   events.find(({ event }) => event === "Deposited").args;
@@ -25,6 +26,11 @@ let NitroAdjudicator: Contract;
 
 // Import state channels utilities
 import { Channel, getChannelId } from "@statechannels/nitro-protocol";
+import {
+  sign,
+  signStates,
+} from "@statechannels/nitro-protocol/lib/test/test-helpers";
+import { HashZero, AddressZero } from "ethers/constants";
 
 // Set up an interface to the deployed Asset Holder Contract
 beforeAll(async () => {
@@ -36,7 +42,7 @@ beforeAll(async () => {
   );
   NitroAdjudicator = await setupContracts(
     provider,
-    EthAssetHolderArtifact,
+    NitroAdjudicatorArtifact,
     process.env.NITRO_ADJUDICATOR_ADDRESS
   );
 });
@@ -177,5 +183,56 @@ describe("Tutorial", () => {
         fromState.appDefinition
       )
     ).toBe(true);
+  });
+
+  it("Lesson 5: Support a state with signatures", async () => {
+    const numStates = 3;
+    const whoSignedWhat = [0, 1, 2];
+    const largestTurnNum = 2;
+    const participants = [];
+    const wallets = [];
+    for (let i = 0; i < 3; i++) {
+      wallets[i] = Wallet.createRandom();
+      participants[i] = wallets[i].address;
+    }
+    const chainId = "0x1234";
+    const channelNonce = bigNumberify(0).toHexString();
+    const channel: Channel = { chainId, channelNonce, participants };
+
+    const states: State[] = [];
+    for (let i = 1; i <= numStates; i++) {
+      states.push({
+        isFinal: true,
+        channel,
+        outcome: [],
+        appDefinition: AddressZero,
+        appData: HashZero,
+        challengeDuration: 1,
+        turnNum: largestTurnNum + i - numStates,
+      });
+    }
+
+    // Sign the states
+    const sigs = await signStates(states, wallets, whoSignedWhat);
+
+    sigs.reverse(); // FIXME
+
+    /*
+     * Use the checpoint method to test our signatures
+     * Tx will revert if they are incorrect
+     */
+    const fixedPart = getFixedPart(states[0]);
+    const variableParts = states.map((s) => getVariablePart(s));
+    const isFinalCount = states.filter((s) => s.isFinal).length;
+
+    const tx = NitroAdjudicator.checkpoint(
+      fixedPart,
+      largestTurnNum,
+      variableParts,
+      isFinalCount,
+      sigs,
+      whoSignedWhat
+    );
+    await (await tx).wait();
   });
 });
