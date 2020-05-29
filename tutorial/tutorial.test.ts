@@ -649,13 +649,14 @@ describe("Tutorial", () => {
   });
 
   it.only("Lesson 12: Construct a guarantee Outcome", async () => {
+    // Construct a guarantee outcome that gives preference to player b over player a
     const assetOutcome: GuaranteeAssetOutcome = {
       assetHolderAddress: process.env.ETH_ASSET_HOLDER_ADDRESS,
       guarantee: {
         targetChannelId: HashZero,
         destinations: [
-          "0x000000000000000000000000000000000000000000000000000000000000000b",
-          "0x000000000000000000000000000000000000000000000000000000000000000a",
+          "0x000000000000000000000000000000000000000000000000000000000000000a", // FIXME
+          "0x000000000000000000000000000000000000000000000000000000000000000b", // FIXME
         ],
       },
     };
