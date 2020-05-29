@@ -514,7 +514,7 @@ describe("Tutorial", () => {
 
     const expectedChannelStorageHash = channelDataToChannelStorageHash({
       turnNumRecord: largestTurnNum,
-      finalizesAt: 0x0,
+      finalizesAt: 0x1, // FIXME
     });
 
     // Check channelStorageHash against the expected value
