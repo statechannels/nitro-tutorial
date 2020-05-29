@@ -319,12 +319,13 @@ describe("Tutorial", () => {
 
     // Sign the states
     const signatures = await signStates(states, wallets, whoSignedWhat);
-    const challengeState: SignedState = {
-      state: states[states.length - 1],
-      signature: { v: 0, r: "", s: "" },
-    };
+    const challengeSignedState: SignedState = signState(
+      states[states.length - 1],
+      challenger.privateKey
+    );
+
     const challengeSignature = signChallengeMessage(
-      [challengeState],
+      [challengeSignedState],
       challenger.privateKey
     );
 
