@@ -1,6 +1,12 @@
 // Import Ethereum utilities
 import { Contract, Wallet, ethers } from "ethers";
-import { bigNumberify, parseUnits, id, hexlify } from "ethers/utils";
+import {
+  bigNumberify,
+  parseUnits,
+  id,
+  hexlify,
+  hexZeroPad,
+} from "ethers/utils";
 import {
   getTestProvider,
   setupContracts,
@@ -13,6 +19,7 @@ import {
   signState,
   hashOutcome,
   SignedState,
+  encodeOutcome,
 } from "@statechannels/nitro-protocol";
 const getDepositedEvent = (events) =>
   events.find(({ event }) => event === "Deposited").args;
@@ -28,13 +35,21 @@ let NitroAdjudicator: Contract;
 
 // Import state channels utilities
 import { Channel, getChannelId } from "@statechannels/nitro-protocol";
-import { signStates } from "@statechannels/nitro-protocol/lib/test/test-helpers";
+import {
+  signStates,
+  randomExternalDestination,
+} from "@statechannels/nitro-protocol/lib/test/test-helpers";
 import { HashZero, AddressZero } from "ethers/constants";
 
 // TODO hoist these up to the module export in nitro-protocol
 import { hashAppPart } from "@statechannels/nitro-protocol/lib/src/contract/state";
 import { signChallengeMessage } from "@statechannels/nitro-protocol/lib/src/signatures";
 import { channelDataToChannelStorageHash } from "@statechannels/nitro-protocol/src/contract/channel-storage";
+import {
+  decodeOutcome,
+  AssetOutcome,
+  AllocationAssetOutcome,
+} from "@statechannels/nitro-protocol/lib/src/contract/outcome";
 
 // Set up an interface to the deployed Asset Holder Contract
 beforeAll(async () => {
@@ -610,5 +625,24 @@ describe("Tutorial", () => {
     );
     expect(bigNumberify(eventFinalizesAt._hex).isZero()).toBe(true); // FIXME
     // expect(bigNumberify(eventFinalizesAt._hex).gt(0)).toBe(true);
+  });
+
+  it.only("Lesson 11: Construct an allocation Outcome", async () => {
+    // An outcome allocation 3 wei to the zero address
+    // Recall that earlier in the tutorial we depositied into the ETH_ASSET_HOLDER
+    // whose address is stored in process.env
+
+    const assetOutcome: AllocationAssetOutcome = {
+      assetHolderAddress: process.env.ETH_ASSET_HOLDER_ADDRESS, // FIXME
+      allocationItems: [
+        { destination: hexZeroPad(AddressZero, 32), amount: "0x03" },
+      ],
+    };
+
+    const outcome: Outcome = [assetOutcome]; // Only 1 asset type here
+    expect(encodeOutcome(outcome)).toEqual(
+      "0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000200000000000000000000000009ed274314f0fb37837346c425d3cf28d89ca95990000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003"
+    );
+    expect(decodeOutcome(encodeOutcome(outcome))).toEqual(outcome);
   });
 });
