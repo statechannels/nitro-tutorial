@@ -395,9 +395,9 @@ describe("Tutorial", () => {
     /* END TEST SETUP */
     /* BEGIN Lesson 8 proper */
 
-    largestTurnNum += 1;
-    appDatas = [1, 2, 3];
-    whoSignedWhat = [2, 0, 1];
+    const numRounds = 2; // FIXME
+    largestTurnNum = 3 * numRounds;
+    appDatas = [largestTurnNum - 2, largestTurnNum - 1, largestTurnNum];
     states = appDatas.map((data, idx) => ({
       turnNum: largestTurnNum - appDatas.length + 1 + idx,
       isFinal: false,
@@ -407,6 +407,7 @@ describe("Tutorial", () => {
       appDefinition: process.env.TRIVIAL_APP_ADDRESS,
       appData: HashZero,
     }));
+    whoSignedWhat = [2, 0, 1];
     signatures = await signStates(states, wallets, whoSignedWhat);
 
     const tx = NitroAdjudicator.checkpoint(
