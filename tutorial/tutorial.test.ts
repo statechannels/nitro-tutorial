@@ -343,7 +343,7 @@ describe("Tutorial", () => {
     await (await tx).wait();
   });
 
-  it.only("Lesson 8: Clear a challenge using checkpoint", async () => {
+  it("Lesson 8: Clear a challenge using checkpoint", async () => {
     /* BEGIN TEST SETUP, to put the chain in a challenge mode */
     let largestTurnNum = 8;
     const isFinalCount = 0;
