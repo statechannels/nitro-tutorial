@@ -633,7 +633,7 @@ describe("Tutorial", () => {
     // whose address is stored in process.env
 
     const assetOutcome: AllocationAssetOutcome = {
-      assetHolderAddress: process.env.ETH_ASSET_HOLDER_ADDRESS, // FIXME
+      assetHolderAddress: AddressZero, // FIXME
       allocationItems: [
         { destination: hexZeroPad(AddressZero, 32), amount: "0x03" },
       ],
