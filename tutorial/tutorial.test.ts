@@ -1,5 +1,5 @@
 // Import Ethereum utilities
-import { Contract, Wallet } from "ethers";
+import { Contract, Wallet, ethers } from "ethers";
 import { bigNumberify, parseUnits, id } from "ethers/utils";
 import {
   getTestProvider,
@@ -315,7 +315,8 @@ describe("Tutorial", () => {
     const variableParts = states.map((state) => getVariablePart(state));
     const fixedPart = getFixedPart(states[0]);
 
-    const challenger = wallets[0];
+    const challenger = Wallet.createRandom(); // FIXME
+    // const challenger = wallets[0];
 
     // Sign the states
     const signatures = await signStates(states, wallets, whoSignedWhat);
