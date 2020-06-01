@@ -721,7 +721,8 @@ describe("Tutorial", () => {
     const receipt = await (await tx0).wait();
 
     const channelId = getChannelId(channel);
-    const turnNumRecord = 0; // Always 0 for a happy conclude
+    const turnNumRecord = largestTurnNum; // FIXME
+    // const turnNumRecord = 0; // Always 0 for a happy conclude
     const finalizesAt = (await provider.getBlock(receipt.blockNumber))
       .timestamp;
     const stateHash = HashZero; // Reset in a happy conclude
