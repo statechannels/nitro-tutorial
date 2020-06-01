@@ -833,7 +833,8 @@ describe("Tutorial", () => {
 
     const tx3 = ETHAssetHolder.transferAll(
       channelId,
-      encodeAllocation(assetOutcome.allocationItems)
+      HashZero // FIXME
+      // encodeAllocation(assetOutcome.allocationItems)
     );
 
     const { events } = await (await tx3).wait();
