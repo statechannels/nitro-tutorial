@@ -101,7 +101,7 @@ describe("Tutorial", () => {
     */
     const channelNonce = bigNumberify(0).toHexString();
 
-    // const channelId = "fixme"; // FIX ME
+    const channelId = "fixme"; // FIX ME
 
     /* 
       Uncomment the lines below to use the imported helper function to compute the channel id.
@@ -109,7 +109,7 @@ describe("Tutorial", () => {
     */
 
     const channel: Channel = { chainId, channelNonce, participants };
-    const channelId = getChannelId(channel);
+    // const channelId = getChannelId(channel);
 
     /* 
       Expectations around the format of the channel Id:
@@ -170,7 +170,7 @@ describe("Tutorial", () => {
       appData: "0x0",
     };
 
-    expect(state.isFinal).toBeFalsy;
+    expect(state.isFinal).toBe(false);
 
     const fixedPart = getFixedPart(state);
     const variablePart = getVariablePart(state);
@@ -192,20 +192,21 @@ describe("Tutorial", () => {
     const fromState: State = {
       channel,
       outcome: [],
-      turnNum: 1,
+      turnNum: 0,
       isFinal: false,
       challengeDuration: 0x0,
       appDefinition: process.env.TRIVIAL_APP_ADDRESS,
       appData: "0x0",
     };
-    const toState: State = { ...fromState, turnNum: 3 }; // FIXME
+    const toState: State = { ...fromState, turnNum: 1, appData: "0x1" }; // FIXME
 
     expect(
       await NitroAdjudicator.validTransition(
         channel.participants.length,
         [fromState.isFinal, toState.isFinal],
         [getVariablePart(fromState), getVariablePart(toState)],
-        toState.turnNum,
+        toState.turnNum, // We only get to submit one turn number so cannot check validity
+        // If incorrect, transactions will fail during a check on state signatures
         fromState.appDefinition
       )
     ).toBe(true);
