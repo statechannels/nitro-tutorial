@@ -42,7 +42,10 @@ import {
 import { HashZero, AddressZero } from "ethers/constants";
 
 // TODO hoist these up to the module export in nitro-protocol
-import { hashAppPart } from "@statechannels/nitro-protocol/lib/src/contract/state";
+import {
+  hashAppPart,
+  hashState,
+} from "@statechannels/nitro-protocol/lib/src/contract/state";
 import { signChallengeMessage } from "@statechannels/nitro-protocol/lib/src/signatures";
 import { channelDataToChannelStorageHash } from "@statechannels/nitro-protocol/src/contract/channel-storage";
 import {
@@ -52,9 +55,10 @@ import {
   GuaranteeAssetOutcome,
 } from "@statechannels/nitro-protocol/lib/src/contract/outcome";
 
+let provider: ethers.providers.JsonRpcProvider;
 // Set up an interface to the deployed Asset Holder Contract
 beforeAll(async () => {
-  const provider = getTestProvider();
+  provider = getTestProvider();
   ETHAssetHolder = await setupContracts(
     provider,
     EthAssetHolderArtifact,
@@ -238,7 +242,7 @@ describe("Tutorial", () => {
     sigs.reverse(); // FIXME
 
     /*
-     * Use the checpoint method to test our signatures
+     * Use the checkpoint method to test our signatures
      * Tx will revert if they are incorrect
      */
     const fixedPart = getFixedPart(states[0]);
@@ -648,7 +652,7 @@ describe("Tutorial", () => {
     expect(decodeOutcome(encodeOutcome(outcome))).toEqual(outcome);
   });
 
-  it.only("Lesson 12: Construct a guarantee Outcome", async () => {
+  it("Lesson 12: Construct a guarantee Outcome", async () => {
     // Construct a guarantee outcome that gives preference to player b over player a
     const assetOutcome: GuaranteeAssetOutcome = {
       assetHolderAddress: process.env.ETH_ASSET_HOLDER_ADDRESS,
@@ -666,5 +670,73 @@ describe("Tutorial", () => {
       "0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000200000000000000000000000009ed274314f0fb37837346c425d3cf28d89ca95990000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000014000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000b000000000000000000000000000000000000000000000000000000000000000a"
     );
     expect(decodeOutcome(encodeOutcome(outcome))).toEqual(outcome);
+  });
+
+  it.only("Lesson 13: Call pushOutcome", async () => {
+    // BEGIN LESSON SETUP
+    const whoSignedWhat = [0, 0, 0];
+    const largestTurnNum = 4;
+    const participants = [];
+    const wallets: Wallet[] = [];
+    for (let i = 0; i < 3; i++) {
+      wallets[i] = Wallet.createRandom();
+      participants[i] = wallets[i].address;
+    }
+    const chainId = "0x1234";
+    const channelNonce = bigNumberify(0).toHexString();
+    const channel: Channel = { chainId, channelNonce, participants };
+
+    const state: State = {
+      isFinal: true,
+      channel,
+      outcome: [],
+      appDefinition: AddressZero,
+      appData: HashZero,
+      challengeDuration: 1,
+      turnNum: largestTurnNum,
+    };
+
+    // Sign the states
+    const sigs = await signStates([state], wallets, whoSignedWhat);
+
+    /*
+     * Conclude
+     */
+    const numStates = 1;
+    const fixedPart = getFixedPart(state);
+    const appPartHash = hashAppPart(state);
+    const outcomeHash = hashOutcome(state.outcome);
+    // END LESSON SETUP
+    // BEGIN LESSON 13 proper
+
+    const tx0 = NitroAdjudicator.conclude(
+      largestTurnNum,
+      fixedPart,
+      appPartHash,
+      outcomeHash,
+      numStates,
+      whoSignedWhat,
+      sigs
+    );
+    const receipt = await (await tx0).wait();
+
+    const channelId = getChannelId(channel);
+    const turnNumRecord = 0; // Always 0 for a happy conclude
+    const finalizesAt = (await provider.getBlock(receipt.blockNumber))
+      .timestamp;
+    const stateHash = HashZero; // Reset in a happy conclude
+    const challengerAddress = AddressZero; // Reset in a happy conclude
+    const outcomeBytes = encodeOutcome(state.outcome);
+
+    const tx1 = NitroAdjudicator.pushOutcome(
+      channelId,
+      turnNumRecord,
+      finalizesAt,
+      stateHash,
+      challengerAddress,
+      outcomeBytes
+    );
+
+    await (await tx1).wait();
   });
 });
