@@ -1,41 +1,53 @@
+import { parseUnits } from "ethers/utils";
+import {
+  randomChannelId,
+  getDepositedEvent,
+} from "@statechannels/nitro-protocol";
 import { ethers } from "ethers";
-import { bigNumberify } from "ethers/utils";
-import { Channel } from "@statechannels/nitro-protocol";
 
-it("Lesson 1: construct a Channel and compute its id", async () => {
+// Set up an ethereum provider connected to our local blockchain
+const provider = new ethers.providers.JsonRpcProvider(
+  `http://localhost:${process.env.GANACHE_PORT}`
+);
+
+// The contract has already been compiled and will be automatically deployed to a local blockchain
+// Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
+const {
+  EthAssetHolderArtifact,
+} = require("@statechannels/nitro-protocol").ContractArtifacts;
+const ETHAssetHolder = new ethers.Contract(
+  process.env.ETH_ASSET_HOLDER_ADDRESS,
+  EthAssetHolderArtifact.abi,
+  provider.getSigner(0)
+);
+
+it("Lesson 2: depositing into the ETH asset holder", async () => {
   /*
-      Construct an array of three participants, using standard ethereum accounts
+      Get an appropriate representation of 1 wei, and
+      use one of our helpers to quickly create a random channel id
     */
-  const participants = [];
-  for (let i = 0; i < 3; i++) {
-    participants[i] = ethers.Wallet.createRandom().address;
-  }
+  const held = parseUnits("1", "wei");
+  const channelId = randomChannelId();
 
   /*
-      As this is only a tutorial, we will target a made-up chain
+      Attempt to deposit 1 wei against the channel id we created.
+      Inspect the error message in the console for a hint about the bug on the next line 
     */
-  const chainId = "0x1234";
+  const tx0 = ETHAssetHolder.deposit(channelId, 0, held, {
+    value: held,
+  }); // FIXME
 
   /* 
-      The channel nonce prevents replay attacks from previous channels
-      It should be unique for a fixed set of participants and chainId
-      It should be formatted as a hex string 
+      Expectations around the event that should be emitted on a successfull deposit, and 
+      the new value of the public 'holdings' storage on chain:
     */
-  const channelNonce = bigNumberify(0).toHexString();
+  const { events } = await (await tx0).wait();
+  const depositedEvent = getDepositedEvent(events);
 
-  const channelId = "fixme"; // FIX ME
-
-  /* 
-      Uncomment the lines below to use the imported helper function to compute the channel id.
-      Feel free to take a look at the implementation of that helper 
-    */
-
-  const channel: Channel = { chainId, channelNonce, participants };
-  // const channelId = getChannelId(channel);
-
-  /* 
-      Expectations around the format of the channel Id:
-    */
-  expect(channelId.slice(0, 2)).toEqual("0x");
-  expect(channelId).toHaveLength(66);
+  expect(await ETHAssetHolder.holdings(channelId)).toEqual(held);
+  expect(depositedEvent).toMatchObject({
+    channelId,
+    amountDeposited: held,
+    destinationHoldings: held,
+  });
 });
