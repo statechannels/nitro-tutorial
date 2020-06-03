@@ -1,51 +1,41 @@
 import { ethers } from "ethers";
-import { Channel, State, getVariablePart } from "@statechannels/nitro-protocol";
+import { bigNumberify } from "ethers/utils";
+import { Channel } from "@statechannels/nitro-protocol";
 
-// Set up an ethereum provider connected to our local blockchain
-const provider = new ethers.providers.JsonRpcProvider(
-  `http://localhost:${process.env.GANACHE_PORT}`
-);
-// The contract has already been compiled and will be automatically deployed to a local blockchain
-// Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
-const {
-  NitroAdjudicatorArtifact,
-} = require("@statechannels/nitro-protocol").ContractArtifacts;
+it("Lesson 4: construct a Channel and compute its id", async () => {
+  /*
+      Construct an array of three participants, using standard ethereum accounts
+    */
+  const participants = [];
+  for (let i = 0; i < 3; i++) {
+    participants[i] = ethers.Wallet.createRandom().address;
+  }
 
-const NitroAdjudicator = new ethers.Contract(
-  process.env.NITRO_ADJUDICATOR_ADDRESS,
-  NitroAdjudicatorArtifact.abi,
-  provider.getSigner(0)
-);
+  /*
+      As this is only a tutorial, we will target a made-up chain
+    */
+  const chainId = "0x1234";
 
-it("Lesson 4: Conform to an on chain validTransition function", async () => {
-  const channel: Channel = {
-    participants: [
-      ethers.Wallet.createRandom().address,
-      ethers.Wallet.createRandom().address,
-    ],
-    chainId: "0x1",
-    channelNonce: "0x1",
-  };
+  /* 
+      The channel nonce prevents replay attacks from previous channels
+      It should be unique for a fixed set of participants and chainId
+      It should be formatted as a hex string 
+    */
+  const channelNonce = bigNumberify(0).toHexString();
 
-  const fromState: State = {
-    channel,
-    outcome: [],
-    turnNum: 0,
-    isFinal: false,
-    challengeDuration: 0x0,
-    appDefinition: process.env.TRIVIAL_APP_ADDRESS,
-    appData: "0x0",
-  };
-  const toState: State = { ...fromState, turnNum: 1, appData: "0x1" }; // FIXME
+  const channelId = "fixme"; // FIX ME
 
-  expect(
-    await NitroAdjudicator.validTransition(
-      channel.participants.length,
-      [fromState.isFinal, toState.isFinal],
-      [getVariablePart(fromState), getVariablePart(toState)],
-      toState.turnNum, // We only get to submit one turn number so cannot check validity
-      // If incorrect, transactions will fail during a check on state signatures
-      fromState.appDefinition
-    )
-  ).toBe(true);
+  /* 
+      Uncomment the lines below to use the imported helper function to compute the channel id.
+      Feel free to take a look at the implementation of that helper 
+    */
+
+  const channel: Channel = { chainId, channelNonce, participants };
+  // const channelId = getChannelId(channel);
+
+  /* 
+      Expectations around the format of the channel Id:
+    */
+  expect(channelId.slice(0, 2)).toEqual("0x");
+  expect(channelId).toHaveLength(66);
 });
