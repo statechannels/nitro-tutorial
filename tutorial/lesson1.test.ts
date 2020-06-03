@@ -21,7 +21,7 @@ const ETHAssetHolder = new ethers.Contract(
   provider.getSigner(0)
 );
 
-it("Lesson 2: depositing into the ETH asset holder", async () => {
+it("Lesson 1: depositing into the ETH asset holder", async () => {
   /*
       Get an appropriate representation of 1 wei, and
       use one of our helpers to quickly create a random channel id

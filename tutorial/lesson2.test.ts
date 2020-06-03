@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { bigNumberify } from "ethers/utils";
 import { Channel } from "@statechannels/nitro-protocol";
 
-it("Lesson 1: construct a Channel and compute its id", async () => {
+it("Lesson 2: construct a Channel and compute its id", async () => {
   /*
       Construct an array of three participants, using standard ethereum accounts
     */
