@@ -24,14 +24,28 @@ import {
 const getDepositedEvent = (events) =>
   events.find(({ event }) => event === "Deposited").args;
 
+// Set up an ethereum provider connected to our local blockchain
+const provider = new ethers.providers.JsonRpcProvider(
+  `http://localhost:${process.env.GANACHE_PORT}`
+);
+
 // The contract has already been compiled and will be automatically deployed to a local blockchain
 // Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
 const {
   NitroAdjudicatorArtifact,
   EthAssetHolderArtifact,
 } = require("@statechannels/nitro-protocol").ContractArtifacts;
-let ETHAssetHolder: Contract;
-let NitroAdjudicator: Contract;
+const ETHAssetHolder = new ethers.Contract(
+  process.env.ETH_ASSET_HOLDER_ADDRESS,
+  EthAssetHolderArtifact.abi,
+  provider.getSigner(0)
+);
+
+const NitroAdjudicator = new ethers.Contract(
+  process.env.NITRO_ADJUDICATOR_ADDRESS,
+  NitroAdjudicatorArtifact.abi,
+  provider.getSigner(0)
+);
 
 // Import state channels utilities
 import { Channel, getChannelId } from "@statechannels/nitro-protocol";
@@ -56,23 +70,6 @@ import {
   encodeAllocation,
   encodeGuarantee,
 } from "@statechannels/nitro-protocol/lib/src/contract/outcome";
-
-let provider: ethers.providers.JsonRpcProvider;
-// Set up an interface to the deployed Asset Holder Contract
-beforeAll(() => {
-  provider = getTestProvider();
-  ETHAssetHolder = new ethers.Contract(
-    process.env.ETH_ASSET_HOLDER_ADDRESS,
-    EthAssetHolderArtifact.abi,
-    provider.getSigner(0)
-  );
-
-  NitroAdjudicator = new ethers.Contract(
-    process.env.NITRO_ADJUDICATOR_ADDRESS,
-    NitroAdjudicatorArtifact.abi,
-    provider.getSigner(0)
-  );
-});
 
 describe("Tutorial", () => {
   /*
