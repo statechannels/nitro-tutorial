@@ -1,5 +1,5 @@
 // Import Ethereum utilities
-import { Contract, Wallet, ethers } from "ethers";
+import { ethers } from "ethers";
 import {
   bigNumberify,
   parseUnits,
@@ -8,14 +8,11 @@ import {
   hexZeroPad,
 } from "ethers/utils";
 import {
-  getTestProvider,
-  setupContracts,
   randomChannelId,
   State,
   Outcome,
   getVariablePart,
   getFixedPart,
-  validTransition,
   signState,
   hashOutcome,
   SignedState,
@@ -84,7 +81,7 @@ describe("Tutorial", () => {
     */
     const participants = [];
     for (let i = 0; i < 3; i++) {
-      participants[i] = Wallet.createRandom().address;
+      participants[i] = ethers.Wallet.createRandom().address;
     }
 
     /*
@@ -150,7 +147,7 @@ describe("Tutorial", () => {
   it("Lesson 3: Form a State with the correct format", async () => {
     const participants = [];
     for (let i = 0; i < 3; i++) {
-      participants[i] = Wallet.createRandom().address;
+      participants[i] = ethers.Wallet.createRandom().address;
     }
     const chainId = "0x1234";
     const channelNonce = bigNumberify(0).toHexString();
@@ -180,8 +177,8 @@ describe("Tutorial", () => {
   it("Lesson 4: Conform to an on chain validTransition function", async () => {
     const channel: Channel = {
       participants: [
-        Wallet.createRandom().address,
-        Wallet.createRandom().address,
+        ethers.Wallet.createRandom().address,
+        ethers.Wallet.createRandom().address,
       ],
       chainId: "0x1",
       channelNonce: "0x1",
@@ -215,9 +212,9 @@ describe("Tutorial", () => {
     const whoSignedWhat = [0, 1, 2];
     const largestTurnNum = 2;
     const participants = [];
-    const wallets: Wallet[] = [];
+    const wallets: ethers.Wallet[] = [];
     for (let i = 0; i < 3; i++) {
-      wallets[i] = Wallet.createRandom();
+      wallets[i] = ethers.Wallet.createRandom();
       participants[i] = wallets[i].address;
     }
     const chainId = "0x1234";
@@ -265,9 +262,9 @@ describe("Tutorial", () => {
     const whoSignedWhat = [0, 0, 0];
     const largestTurnNum = 4;
     const participants = [];
-    const wallets: Wallet[] = [];
+    const wallets: ethers.Wallet[] = [];
     for (let i = 0; i < 3; i++) {
-      wallets[i] = Wallet.createRandom();
+      wallets[i] = ethers.Wallet.createRandom();
       participants[i] = wallets[i].address;
     }
     const chainId = "0x1234";
@@ -310,9 +307,9 @@ describe("Tutorial", () => {
     const largestTurnNum = 8;
     const isFinalCount = 0;
     const participants = [];
-    const wallets: Wallet[] = [];
+    const wallets: ethers.Wallet[] = [];
     for (let i = 0; i < 3; i++) {
-      wallets[i] = Wallet.createRandom();
+      wallets[i] = ethers.Wallet.createRandom();
       participants[i] = wallets[i].address;
     }
     const chainId = "0x1234";
@@ -334,7 +331,7 @@ describe("Tutorial", () => {
     const variableParts = states.map((state) => getVariablePart(state));
     const fixedPart = getFixedPart(states[0]);
 
-    const challenger = Wallet.createRandom(); // FIXME
+    const challenger = ethers.Wallet.createRandom(); // FIXME
     // const challenger = wallets[0];
 
     // Sign the states
@@ -366,9 +363,9 @@ describe("Tutorial", () => {
     let largestTurnNum = 8;
     const isFinalCount = 0;
     const participants = [];
-    const wallets: Wallet[] = [];
+    const wallets: ethers.Wallet[] = [];
     for (let i = 0; i < 3; i++) {
-      wallets[i] = Wallet.createRandom();
+      wallets[i] = ethers.Wallet.createRandom();
       participants[i] = wallets[i].address;
     }
     const chainId = "0x1234";
@@ -455,9 +452,9 @@ describe("Tutorial", () => {
     let largestTurnNum = 8;
     const isFinalCount = 0;
     const participants = [];
-    const wallets: Wallet[] = [];
+    const wallets: ethers.Wallet[] = [];
     for (let i = 0; i < 3; i++) {
-      wallets[i] = Wallet.createRandom();
+      wallets[i] = ethers.Wallet.createRandom();
       participants[i] = wallets[i].address;
     }
     const chainId = "0x1234";
@@ -549,9 +546,9 @@ describe("Tutorial", () => {
     let largestTurnNum = 8;
     const isFinalCount = 0;
     const participants = [];
-    const wallets: Wallet[] = [];
+    const wallets: ethers.Wallet[] = [];
     for (let i = 0; i < 3; i++) {
-      wallets[i] = Wallet.createRandom();
+      wallets[i] = ethers.Wallet.createRandom();
       participants[i] = wallets[i].address;
     }
     const chainId = "0x1234";
@@ -678,9 +675,9 @@ describe("Tutorial", () => {
     const whoSignedWhat = [0, 0, 0];
     const largestTurnNum = 4;
     const participants = [];
-    const wallets: Wallet[] = [];
+    const wallets: ethers.Wallet[] = [];
     for (let i = 0; i < 3; i++) {
-      wallets[i] = Wallet.createRandom();
+      wallets[i] = ethers.Wallet.createRandom();
       participants[i] = wallets[i].address;
     }
     const chainId = "0x1234";
@@ -757,9 +754,9 @@ describe("Tutorial", () => {
     const whoSignedWhat = [0, 0, 0];
     const largestTurnNum = 4;
     const participants = [];
-    const wallets: Wallet[] = [];
+    const wallets: ethers.Wallet[] = [];
     for (let i = 0; i < 3; i++) {
-      wallets[i] = Wallet.createRandom();
+      wallets[i] = ethers.Wallet.createRandom();
       participants[i] = wallets[i].address;
     }
     const chainId = "0x1234";
@@ -874,9 +871,9 @@ describe("Tutorial", () => {
     const whoSignedWhat = [0, 0, 0];
     const largestTurnNum = 4;
     const participants = [];
-    const wallets: Wallet[] = [];
+    const wallets: ethers.Wallet[] = [];
     for (let i = 0; i < 3; i++) {
-      wallets[i] = Wallet.createRandom();
+      wallets[i] = ethers.Wallet.createRandom();
       participants[i] = wallets[i].address;
     }
     const chainId = "0x1234";
