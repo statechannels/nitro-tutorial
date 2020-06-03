@@ -8,7 +8,7 @@ import {
   signStates,
 } from "@statechannels/nitro-protocol";
 import { AddressZero, HashZero } from "ethers/constants";
-import { hashAppPart } from "@statechannels/nitro-protocol/lib/src/contract/state";
+import { hashAppPart } from "@statechannels/nitro-protocol";
 
 // Set up an ethereum provider connected to our local blockchain
 const provider = new ethers.providers.JsonRpcProvider(

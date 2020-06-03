@@ -9,10 +9,10 @@ import {
   signStates,
   signState,
   SignedState,
+  signChallengeMessage,
+  channelDataToChannelStorageHash,
 } from "@statechannels/nitro-protocol";
 import { HashZero } from "ethers/constants";
-import { signChallengeMessage } from "@statechannels/nitro-protocol/lib/src/signatures";
-import { channelDataToChannelStorageHash } from "@statechannels/nitro-protocol/src/contract/channel-storage";
 
 // Set up an ethereum provider connected to our local blockchain
 const provider = new ethers.providers.JsonRpcProvider(

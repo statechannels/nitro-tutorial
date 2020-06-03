@@ -2,9 +2,9 @@ import {
   GuaranteeAssetOutcome,
   Outcome,
   encodeOutcome,
+  decodeOutcome,
 } from "@statechannels/nitro-protocol";
 import { HashZero } from "ethers/constants";
-import { decodeOutcome } from "@statechannels/nitro-protocol/lib/src/contract/outcome";
 
 it("Lesson 12: Construct a guarantee Outcome", async () => {
   // Construct a guarantee outcome that gives preference to player b over player a

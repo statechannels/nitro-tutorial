@@ -9,9 +9,9 @@ import {
   getChannelId,
   encodeOutcome,
   AllocationAssetOutcome,
+  hashAppPart,
 } from "@statechannels/nitro-protocol";
 import { AddressZero, HashZero } from "ethers/constants";
-import { hashAppPart } from "@statechannels/nitro-protocol/lib/src/contract/state";
 
 // Set up an ethereum provider connected to our local blockchain
 const provider = new ethers.providers.JsonRpcProvider(

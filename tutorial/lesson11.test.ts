@@ -2,10 +2,10 @@ import {
   AllocationAssetOutcome,
   Outcome,
   encodeOutcome,
+  decodeOutcome,
 } from "@statechannels/nitro-protocol";
 import { AddressZero } from "ethers/constants";
 import { hexZeroPad } from "ethers/utils";
-import { decodeOutcome } from "@statechannels/nitro-protocol/lib/src/contract/outcome";
 
 it("Lesson 11: Construct an allocation Outcome", async () => {
   // An outcome allocation 3 wei to the zero address
