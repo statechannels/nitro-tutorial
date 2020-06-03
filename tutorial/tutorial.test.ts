@@ -59,17 +59,18 @@ import {
 
 let provider: ethers.providers.JsonRpcProvider;
 // Set up an interface to the deployed Asset Holder Contract
-beforeAll(async () => {
+beforeAll(() => {
   provider = getTestProvider();
-  ETHAssetHolder = await setupContracts(
-    provider,
-    EthAssetHolderArtifact,
-    process.env.ETH_ASSET_HOLDER_ADDRESS
+  ETHAssetHolder = new ethers.Contract(
+    process.env.ETH_ASSET_HOLDER_ADDRESS,
+    EthAssetHolderArtifact.abi,
+    provider.getSigner(0)
   );
-  NitroAdjudicator = await setupContracts(
-    provider,
-    NitroAdjudicatorArtifact,
-    process.env.NITRO_ADJUDICATOR_ADDRESS
+
+  NitroAdjudicator = new ethers.Contract(
+    process.env.NITRO_ADJUDICATOR_ADDRESS,
+    NitroAdjudicatorArtifact.abi,
+    provider.getSigner(0)
   );
 });
 
