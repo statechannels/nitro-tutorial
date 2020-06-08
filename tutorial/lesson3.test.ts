@@ -1,5 +1,9 @@
+/* Import ethereum wallet utilities  */
 import { ethers } from "ethers";
 import { bigNumberify } from "ethers/utils";
+import { AddressZero, HashZero } from "ethers/constants";
+
+/* Import statechannels wallet utilities  */
 import {
   Channel,
   State,
@@ -7,18 +11,19 @@ import {
   getFixedPart,
   getVariablePart,
 } from "@statechannels/nitro-protocol";
-// Set up an ethereum provider connected to our local blockchain
+
+/* Set up an ethereum provider connected to our local blockchain */
 const provider = new ethers.providers.JsonRpcProvider(
   `http://localhost:${process.env.GANACHE_PORT}`
 );
 
-import { AddressZero, HashZero } from "ethers/constants";
-// The contract has already been compiled and will be automatically deployed to a local blockchain
-// Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
+/* 
+  The NitroAdjudicator contract has already been compiled and will be automatically deployed to a local blockchain.
+  Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
+*/
 const {
   NitroAdjudicatorArtifact,
 } = require("@statechannels/nitro-protocol").ContractArtifacts;
-
 const NitroAdjudicator = new ethers.Contract(
   process.env.NITRO_ADJUDICATOR_ADDRESS,
   NitroAdjudicatorArtifact.abi,
@@ -26,9 +31,7 @@ const NitroAdjudicator = new ethers.Contract(
 );
 
 it("Lesson 3: Support a state with signatures", async () => {
-  const numStates = 3;
-  const whoSignedWhat = [0, 1, 2];
-  const largestTurnNum = 2;
+  /* Construct a channel with 3 participants */
   const participants = [];
   const wallets: ethers.Wallet[] = [];
   for (let i = 0; i < 3; i++) {
@@ -39,6 +42,9 @@ it("Lesson 3: Support a state with signatures", async () => {
   const channelNonce = bigNumberify(0).toHexString();
   const channel: Channel = { chainId, channelNonce, participants };
 
+  /* Construct an array of 3 States */
+  const numStates = 3;
+  const largestTurnNum = 2;
   const states: State[] = [];
   for (let i = 1; i <= numStates; i++) {
     states.push({
@@ -52,9 +58,9 @@ it("Lesson 3: Support a state with signatures", async () => {
     });
   }
 
-  // Sign the states
+  /* Sign the states */
+  const whoSignedWhat = [0, 1, 2];
   const sigs = await signStates(states, wallets, whoSignedWhat);
-
   sigs.reverse(); // FIXME
 
   /*
