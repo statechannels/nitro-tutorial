@@ -1,26 +1,29 @@
+/* Import ethereum wallet utilities  */
 import { ethers } from "ethers";
+import { AddressZero, HashZero } from "ethers/constants";
 import { bigNumberify } from "ethers/utils";
+
+/* Import statechannels wallet utilities  */
 import {
   Channel,
   State,
   getFixedPart,
   hashOutcome,
   signStates,
+  hashAppPart,
 } from "@statechannels/nitro-protocol";
-import { AddressZero, HashZero } from "ethers/constants";
-import { hashAppPart } from "@statechannels/nitro-protocol";
 
-// Set up an ethereum provider connected to our local blockchain
-const provider = new ethers.providers.JsonRpcProvider(
+/* Set up an ethereum provider connected to our local blockchain */ const provider = new ethers.providers.JsonRpcProvider(
   `http://localhost:${process.env.GANACHE_PORT}`
 );
 
-// The contract has already been compiled and will be automatically deployed to a local blockchain
-// Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
+/* 
+  The NitroAdjudicator contract has already been compiled and will be automatically deployed to a local blockchain.
+  Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
+*/
 const {
   NitroAdjudicatorArtifact,
 } = require("@statechannels/nitro-protocol").ContractArtifacts;
-
 const NitroAdjudicator = new ethers.Contract(
   process.env.NITRO_ADJUDICATOR_ADDRESS,
   NitroAdjudicatorArtifact.abi,
@@ -28,8 +31,7 @@ const NitroAdjudicator = new ethers.Contract(
 );
 
 it("Lesson 6: Conclude a channel (happy)", async () => {
-  const whoSignedWhat = [0, 0, 0];
-  const largestTurnNum = 4;
+  /* Construct a final state */
   const participants = [];
   const wallets: ethers.Wallet[] = [];
   for (let i = 0; i < 3; i++) {
@@ -39,7 +41,7 @@ it("Lesson 6: Conclude a channel (happy)", async () => {
   const chainId = "0x1234";
   const channelNonce = bigNumberify(0).toHexString();
   const channel: Channel = { chainId, channelNonce, participants };
-
+  const largestTurnNum = 4;
   const state: State = {
     isFinal: false, // FIXME
     channel,
@@ -50,12 +52,13 @@ it("Lesson 6: Conclude a channel (happy)", async () => {
     turnNum: largestTurnNum,
   };
 
-  // Sign the states
+  /* Generate a finalization proof */
+  const whoSignedWhat = [0, 0, 0];
   const sigs = await signStates([state], wallets, whoSignedWhat);
 
   /*
-   * Conclude
-   */
+    Call conclude
+  */
   const numStates = 1;
   const fixedPart = getFixedPart(state);
   const appPartHash = hashAppPart(state);
