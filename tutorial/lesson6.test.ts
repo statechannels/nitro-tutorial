@@ -13,7 +13,8 @@ import {
   hashAppPart,
 } from "@statechannels/nitro-protocol";
 
-/* Set up an ethereum provider connected to our local blockchain */ const provider = new ethers.providers.JsonRpcProvider(
+/* Set up an ethereum provider connected to our local blockchain */
+const provider = new ethers.providers.JsonRpcProvider(
   `http://localhost:${process.env.GANACHE_PORT}`
 );
 
