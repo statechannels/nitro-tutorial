@@ -1,5 +1,9 @@
+/* Import ethereum wallet utilities  */
 import { ethers } from "ethers";
 import { bigNumberify } from "ethers/utils";
+import { AddressZero, HashZero } from "ethers/constants";
+
+/* Import statechannels wallet utilities  */
 import {
   Channel,
   State,
@@ -10,19 +14,19 @@ import {
   encodeOutcome,
   hashAppPart,
 } from "@statechannels/nitro-protocol";
-import { AddressZero, HashZero } from "ethers/constants";
 
-// Set up an ethereum provider connected to our local blockchain
+/* Set up an ethereum provider connected to our local blockchain */
 const provider = new ethers.providers.JsonRpcProvider(
   `http://localhost:${process.env.GANACHE_PORT}`
 );
 
-// The contract has already been compiled and will be automatically deployed to a local blockchain
-// Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
+/* 
+  The NitroAdjudicator contract has already been compiled and will be automatically deployed to a local blockchain.
+  Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
+*/
 const {
   NitroAdjudicatorArtifact,
 } = require("@statechannels/nitro-protocol").ContractArtifacts;
-
 const NitroAdjudicator = new ethers.Contract(
   process.env.NITRO_ADJUDICATOR_ADDRESS,
   NitroAdjudicatorArtifact.abi,
@@ -42,7 +46,6 @@ it("Lesson 13: Call pushOutcome", async () => {
   const chainId = "0x1234";
   const channelNonce = bigNumberify(0).toHexString();
   const channel: Channel = { chainId, channelNonce, participants };
-
   const state: State = {
     isFinal: true,
     channel,
@@ -52,13 +55,7 @@ it("Lesson 13: Call pushOutcome", async () => {
     challengeDuration: 1,
     turnNum: largestTurnNum,
   };
-
-  // Sign the states
   const sigs = await signStates([state], wallets, whoSignedWhat);
-
-  /*
-   * Conclude
-   */
   const numStates = 1;
   const fixedPart = getFixedPart(state);
   const appPartHash = hashAppPart(state);
@@ -66,6 +63,9 @@ it("Lesson 13: Call pushOutcome", async () => {
   // END LESSON SETUP
   // BEGIN LESSON 13 proper
 
+  /* 
+    Submit a conclude transaction
+  */
   const tx0 = NitroAdjudicator.conclude(
     largestTurnNum,
     fixedPart,
@@ -75,15 +75,24 @@ it("Lesson 13: Call pushOutcome", async () => {
     whoSignedWhat,
     sigs
   );
-  const receipt = await (await tx0).wait();
 
-  const channelId = getChannelId(channel);
-  const turnNumRecord = largestTurnNum; // FIXME
-  // const turnNumRecord = 0; // Always 0 for a happy conclude
+  /* 
+    Store the receipt, which tells us about when the challenge was registered
+  */
+  const receipt = await (await tx0).wait();
   const finalizesAt = (await provider.getBlock(receipt.blockNumber)).timestamp;
+
+  /* 
+    Form the arguments for the pushOutcome transaction
+  */
+  const channelId = getChannelId(channel);
+
   const stateHash = HashZero; // Reset in a happy conclude
   const challengerAddress = AddressZero; // Reset in a happy conclude
   const outcomeBytes = encodeOutcome(state.outcome);
+
+  const turnNumRecord = largestTurnNum; // FIXME
+  // const turnNumRecord = 0; // Always 0 for a happy conclude
 
   const tx1 = NitroAdjudicator.pushOutcome(
     channelId,

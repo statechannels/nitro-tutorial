@@ -34,7 +34,7 @@ const NitroAdjudicator = new ethers.Contract(
   provider.getSigner(0)
 );
 
-it("Lesson 10: Scrape vital information from a ChallengeRegistered event", async () => {
+it("Lesson 10: Extract information from a ChallengeRegistered event", async () => {
   /* BEGIN TEST SETUP, prepare a forceMove transaction */
   let largestTurnNum = 8;
   const isFinalCount = 0;
@@ -89,7 +89,7 @@ it("Lesson 10: Scrape vital information from a ChallengeRegistered event", async
     )
   ).wait();
 
-  /* Catch ForceMove event */
+  /* Catch the ForceMove event */
   const event = receipt.events.pop();
   const {
     channelId: eventChannelId,

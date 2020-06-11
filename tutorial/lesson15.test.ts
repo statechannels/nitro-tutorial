@@ -1,5 +1,9 @@
+/* Import ethereum wallet utilities  */
 import { ethers } from "ethers";
 import { bigNumberify, hexZeroPad } from "ethers/utils";
+import { AddressZero, HashZero } from "ethers/constants";
+
+/* Import statechannels wallet utilities  */
 import {
   Channel,
   State,
@@ -14,15 +18,16 @@ import {
   hashAppPart,
   encodeGuarantee,
 } from "@statechannels/nitro-protocol";
-import { AddressZero, HashZero } from "ethers/constants";
 
-// Set up an ethereum provider connected to our local blockchain
+/* Set up an ethereum provider connected to our local blockchain */
 const provider = new ethers.providers.JsonRpcProvider(
   `http://localhost:${process.env.GANACHE_PORT}`
 );
 
-// The contract has already been compiled and will be automatically deployed to a local blockchain
-// Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
+/* 
+  The NitroAdjudicator and EthAssetHolder contracts have already been compiled and will be automatically deployed to a local blockchain.
+  Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
+*/
 const {
   NitroAdjudicatorArtifact,
   EthAssetHolderArtifact,
@@ -32,7 +37,6 @@ const ETHAssetHolder = new ethers.Contract(
   EthAssetHolderArtifact.abi,
   provider.getSigner(0)
 );
-
 const NitroAdjudicator = new ethers.Contract(
   process.env.NITRO_ADJUDICATOR_ADDRESS,
   NitroAdjudicatorArtifact.abi,
@@ -41,12 +45,21 @@ const NitroAdjudicator = new ethers.Contract(
 
 it("Lesson 15: Call claimAll", async () => {
   // BEGIN LESSON SETUP
+  // Following earlier tutorials ...
+  // tx0 finalize a channel that allocates to Alice then Bob
+  // tx1 pushOutcome to the ETH_ASSET_HOLDER
+  // tx2 finalize a guarantor channel that targets the first channel
+  // and reprioritizes Bob over Alice
+  // tx3 pushOutcome to the ETH_ASSET_HOLDER
+  // tx4 fund the _guarantor_ channel, not the target channel
+  // with a deposit that only covers one of the payouts
+  // check that Bob got his payout
+  // ...
   const amount = "0x03";
   const EOA1 = ethers.Wallet.createRandom().address;
   const EOA2 = ethers.Wallet.createRandom().address;
   const destination1 = hexZeroPad(EOA1, 32);
   const destination2 = hexZeroPad(EOA2, 32);
-
   const assetOutcomeForTheTargetChannel: AllocationAssetOutcome = {
     assetHolderAddress: process.env.ETH_ASSET_HOLDER_ADDRESS,
     allocationItems: [
@@ -54,7 +67,6 @@ it("Lesson 15: Call claimAll", async () => {
       { destination: destination2, amount },
     ],
   };
-
   const whoSignedWhat = [0, 0, 0];
   const largestTurnNum = 4;
   const participants = [];
@@ -67,8 +79,6 @@ it("Lesson 15: Call claimAll", async () => {
   const channelNonce = bigNumberify(0).toHexString();
   const targetChannel: Channel = { chainId, channelNonce, participants };
   const targetChannelId = getChannelId(targetChannel);
-
-  // Finalise and pushOutcome for target channel
   const state: State = {
     isFinal: true,
     channel: targetChannel,
@@ -83,7 +93,6 @@ it("Lesson 15: Call claimAll", async () => {
   let fixedPart = getFixedPart(state);
   let appPartHash = hashAppPart(state);
   let outcomeHash = hashOutcome(state.outcome);
-
   const tx0 = NitroAdjudicator.conclude(
     largestTurnNum,
     fixedPart,
@@ -108,9 +117,6 @@ it("Lesson 15: Call claimAll", async () => {
     outcomeBytes
   );
   await (await tx1).wait();
-
-  // Finalise and pushOutcome for the guarantor channel
-
   const assetOutcomeForTheGuarantorChannel: GuaranteeAssetOutcome = {
     assetHolderAddress: process.env.ETH_ASSET_HOLDER_ADDRESS,
     guarantee: {
@@ -121,7 +127,6 @@ it("Lesson 15: Call claimAll", async () => {
       ],
     },
   };
-
   const guarantorChannel: Channel = {
     chainId,
     channelNonce: channelNonce + 1,
@@ -142,7 +147,6 @@ it("Lesson 15: Call claimAll", async () => {
   fixedPart = getFixedPart(stateForGuarantorChannel);
   appPartHash = hashAppPart(stateForGuarantorChannel);
   outcomeHash = hashOutcome(stateForGuarantorChannel.outcome);
-
   const tx2 = NitroAdjudicator.conclude(
     largestTurnNum,
     fixedPart,
@@ -167,16 +171,16 @@ it("Lesson 15: Call claimAll", async () => {
     outcomeBytes
   );
   await (await tx3).wait();
-
   const tx4 = ETHAssetHolder.deposit(guarantorChannelId, 0, amount, {
     value: amount,
   });
-
   await (await tx4).wait();
-
   // END LESSON SETUP
-
   // BEGIN LESSON 15 proper
+
+  /*
+    Submit claimAll transaction
+  */
 
   // FIXME
   const tx5 = ETHAssetHolder.claimAll(
@@ -184,13 +188,15 @@ it("Lesson 15: Call claimAll", async () => {
     encodeAllocation(assetOutcomeForTheTargetChannel.allocationItems),
     encodeGuarantee(assetOutcomeForTheGuarantorChannel.guarantee)
   );
-
   // const tx5 = ETHAssetHolder.claimAll(
   //   guarantorChannelId,
   //   encodeGuarantee(assetOutcomeForTheGuarantorChannel.guarantee),
   //   encodeAllocation(assetOutcomeForTheTargetChannel.allocationItems)
   // );
 
+  /* 
+    Check that an AssetTransferred event was emitted.
+  */
   const { events } = await (await tx5).wait();
 
   expect(events).toMatchObject([
@@ -204,6 +210,9 @@ it("Lesson 15: Call claimAll", async () => {
     },
   ]);
 
+  /* 
+    Check that the ethereum account balance was updated
+  */
   expect(
     bigNumberify(await provider.getBalance(EOA2)).eq(bigNumberify(amount))
   );

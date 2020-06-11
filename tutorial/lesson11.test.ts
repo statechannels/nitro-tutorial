@@ -1,17 +1,21 @@
+/* Import ethereum wallet utilities  */
+import { AddressZero } from "ethers/constants";
+import { hexZeroPad } from "ethers/utils";
+
+/* Import statechannels wallet utilities  */
 import {
   AllocationAssetOutcome,
   Outcome,
   encodeOutcome,
   decodeOutcome,
 } from "@statechannels/nitro-protocol";
-import { AddressZero } from "ethers/constants";
-import { hexZeroPad } from "ethers/utils";
 
 it("Lesson 11: Construct an allocation Outcome", async () => {
-  // An outcome allocation 3 wei to the zero address
-  // Recall that earlier in the tutorial we depositied into the ETH_ASSET_HOLDER
-  // whose address is stored in process.env
-
+  /*
+    Construct an outcome allocating 3 wei to the zero address
+    Recall that earlier in the tutorial we depositied into the ETH_ASSET_HOLDER
+    whose address is stored in process.env
+  */
   const assetOutcome: AllocationAssetOutcome = {
     assetHolderAddress: AddressZero, // FIXME
     allocationItems: [
@@ -21,6 +25,7 @@ it("Lesson 11: Construct an allocation Outcome", async () => {
   };
 
   const outcome: Outcome = [assetOutcome]; // Additional assetOutcomes could be pushed into this array
+
   expect(encodeOutcome(outcome)).toEqual(
     "0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000200000000000000000000000009ed274314f0fb37837346c425d3cf28d89ca95990000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003"
   );
