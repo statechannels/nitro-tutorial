@@ -35,7 +35,7 @@ DApp developers may wish to build against our State Channel Wallet API (coming s
 
 ### Fixing the test
 
-Open `tutorial/tutorial.test.ts` in your text editor. Follow the instructions in a given test case block (starting with `it("...`) and make the necessary changes. If you have left the test runner open, it should automatically re-run the tests for you (with a brand new, clean blockchain). Individual tests are independent.
+Open `tutorial/lesson1.test.ts` in your text editor. Follow the instructions in a given test case block (starting with `it("...`) and make the necessary changes. If you have left the test runner open, it should automatically re-run the tests for you (with a brand new, clean blockchain). Individual tests are independent.
 
 ### Troubleshooting
 
