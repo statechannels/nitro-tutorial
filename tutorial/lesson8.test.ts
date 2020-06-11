@@ -1,5 +1,9 @@
+/* Import ethereum wallet utilities  */
 import { ethers } from "ethers";
 import { bigNumberify } from "ethers/utils";
+import { HashZero } from "ethers/constants";
+
+/* Import statechannels wallet utilities  */
 import {
   Channel,
   getChannelId,
@@ -12,19 +16,20 @@ import {
   signChallengeMessage,
   channelDataToChannelStorageHash,
 } from "@statechannels/nitro-protocol";
-import { HashZero } from "ethers/constants";
+import { ChannelData } from "@statechannels/nitro-protocol/lib/src/contract/channel-storage";
 
-// Set up an ethereum provider connected to our local blockchain
+/* Set up an ethereum provider connected to our local blockchain */
 const provider = new ethers.providers.JsonRpcProvider(
   `http://localhost:${process.env.GANACHE_PORT}`
 );
 
-// The contract has already been compiled and will be automatically deployed to a local blockchain
-// Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
+/* 
+  The NitroAdjudicator contract has already been compiled and will be automatically deployed to a local blockchain.
+  Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
+*/
 const {
   NitroAdjudicatorArtifact,
 } = require("@statechannels/nitro-protocol").ContractArtifacts;
-
 const NitroAdjudicator = new ethers.Contract(
   process.env.NITRO_ADJUDICATOR_ADDRESS,
   NitroAdjudicatorArtifact.abi,
@@ -83,6 +88,7 @@ it("Lesson 8: Clear a challenge using checkpoint", async () => {
   /* END TEST SETUP */
   /* BEGIN Lesson 8 proper */
 
+  /* Form a progression of states */
   const numRounds = 2; // FIXME
   largestTurnNum = 3 * numRounds;
   appDatas = [largestTurnNum - 2, largestTurnNum - 1, largestTurnNum];
@@ -98,6 +104,7 @@ it("Lesson 8: Clear a challenge using checkpoint", async () => {
   whoSignedWhat = [2, 0, 1];
   signatures = await signStates(states, wallets, whoSignedWhat);
 
+  /* Submit a checkpoint transaction */
   const tx = NitroAdjudicator.checkpoint(
     fixedPart,
     largestTurnNum,
@@ -109,12 +116,20 @@ it("Lesson 8: Clear a challenge using checkpoint", async () => {
 
   await (await tx).wait();
 
-  const expectedChannelStorageHash = channelDataToChannelStorageHash({
+  /* 
+    Form an expectation about the new state of the chain:
+  */
+  const channelData: ChannelData = {
     turnNumRecord: largestTurnNum,
     finalizesAt: 0x0,
-  });
+  };
+  const expectedChannelStorageHash = channelDataToChannelStorageHash(
+    channelData
+  );
 
-  // Check channelStorageHash against the expected value
+  /* 
+    Check channelStorageHash against the expected value (it is a public mapping)
+  */
   expect(await NitroAdjudicator.channelStorageHashes(channelId)).toEqual(
     expectedChannelStorageHash
   );

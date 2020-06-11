@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { bigNumberify } from "ethers/utils";
 import { HashZero } from "ethers/constants";
 
+/* Import statechannels wallet utilities  */
 import {
   Channel,
   State,
@@ -32,8 +33,6 @@ const NitroAdjudicator = new ethers.Contract(
 );
 
 it("Lesson 7: Register a challenge using forceMove", async () => {
-  const largestTurnNum = 8;
-  const isFinalCount = 0;
   const participants = [];
   const wallets: ethers.Wallet[] = [];
   for (let i = 0; i < 3; i++) {
@@ -44,10 +43,14 @@ it("Lesson 7: Register a challenge using forceMove", async () => {
   const channelNonce = bigNumberify(0).toHexString();
   const channel: Channel = { chainId, channelNonce, participants };
 
-  const appDatas = [0, 1, 2];
-  const whoSignedWhat = [0, 1, 2];
+  /* Choose a challenger */
+  const challenger = ethers.Wallet.createRandom(); // FIXME
+  // const challenger = wallets[0];
 
   /* Construct a progression of states */
+  const largestTurnNum = 8;
+  const isFinalCount = 0;
+  const appDatas = [0, 1, 2];
   const states: State[] = appDatas.map((data, idx) => ({
     turnNum: largestTurnNum - appDatas.length + 1 + idx,
     isFinal: idx > appDatas.length - isFinalCount,
@@ -58,10 +61,8 @@ it("Lesson 7: Register a challenge using forceMove", async () => {
     appData: HashZero,
   }));
 
-  const challenger = ethers.Wallet.createRandom(); // FIXME
-  // const challenger = wallets[0];
-
   /* Construct a support proof */
+  const whoSignedWhat = [0, 1, 2];
   const signatures = await signStates(states, wallets, whoSignedWhat);
 
   /* Form the challengeSignature */

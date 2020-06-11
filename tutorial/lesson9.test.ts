@@ -1,5 +1,9 @@
+/* Import ethereum wallet utilities  */
 import { ethers } from "ethers";
 import { bigNumberify } from "ethers/utils";
+import { HashZero } from "ethers/constants";
+
+/* Import statechannels wallet utilities  */
 import {
   Channel,
   getChannelId,
@@ -12,19 +16,19 @@ import {
   signChallengeMessage,
   channelDataToChannelStorageHash,
 } from "@statechannels/nitro-protocol";
-import { HashZero } from "ethers/constants";
 
-// Set up an ethereum provider connected to our local blockchain
+/* Set up an ethereum provider connected to our local blockchain */
 const provider = new ethers.providers.JsonRpcProvider(
   `http://localhost:${process.env.GANACHE_PORT}`
 );
 
-// The contract has already been compiled and will be automatically deployed to a local blockchain
-// Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
+/* 
+  The NitroAdjudicator contract has already been compiled and will be automatically deployed to a local blockchain.
+  Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
+*/
 const {
   NitroAdjudicatorArtifact,
 } = require("@statechannels/nitro-protocol").ContractArtifacts;
-
 const NitroAdjudicator = new ethers.Contract(
   process.env.NITRO_ADJUDICATOR_ADDRESS,
   NitroAdjudicatorArtifact.abi,
@@ -83,6 +87,7 @@ it("Lesson 9: Clear a challenge using respond", async () => {
   /* END TEST SETUP */
   /* BEGIN Lesson 9 proper */
 
+  /* Form a response state */
   largestTurnNum += 1;
   const responseState: State = {
     turnNum: largestTurnNum,
@@ -94,6 +99,7 @@ it("Lesson 9: Clear a challenge using respond", async () => {
     challengeDuration,
   };
 
+  /* Form the arguments for a respond transaction */
   const responder = wallets[0];
   const responseSignature = await signState(responseState, responder.privateKey)
     .signature;
@@ -103,6 +109,7 @@ it("Lesson 9: Clear a challenge using respond", async () => {
     getVariablePart(responseState),
   ];
 
+  /* Submit a respond transaction */
   const tx = NitroAdjudicator.respond(
     challenger.address,
     isFinalAB,
@@ -112,12 +119,17 @@ it("Lesson 9: Clear a challenge using respond", async () => {
   );
   await (await tx).wait();
 
+  /* 
+    Form an expectation about the new state of the chain:
+  */
   const expectedChannelStorageHash = channelDataToChannelStorageHash({
     turnNumRecord: largestTurnNum,
     finalizesAt: 0x1, // FIXME
   });
 
-  // Check channelStorageHash against the expected value
+  /* 
+    Check channelStorageHash against the expected value (it is a public mapping)
+  */
   expect(await NitroAdjudicator.channelStorageHashes(channelId)).toEqual(
     expectedChannelStorageHash
   );

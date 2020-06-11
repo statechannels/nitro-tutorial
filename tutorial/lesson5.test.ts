@@ -1,4 +1,7 @@
+/* Import ethereum wallet utilities  */
 import { parseUnits } from "ethers/utils";
+
+/* Import statechannels wallet utilities  */
 import {
   randomChannelId,
   getDepositedEvent,

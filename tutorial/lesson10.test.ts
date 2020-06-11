@@ -1,5 +1,9 @@
+/* Import ethereum wallet utilities  */
 import { ethers } from "ethers";
 import { bigNumberify, hexlify } from "ethers/utils";
+import { HashZero } from "ethers/constants";
+
+/* Import statechannels wallet utilities  */
 import {
   Channel,
   getChannelId,
@@ -11,19 +15,19 @@ import {
   signState,
   signChallengeMessage,
 } from "@statechannels/nitro-protocol";
-import { HashZero } from "ethers/constants";
 
-// Set up an ethereum provider connected to our local blockchain
+/* Set up an ethereum provider connected to our local blockchain */
 const provider = new ethers.providers.JsonRpcProvider(
   `http://localhost:${process.env.GANACHE_PORT}`
 );
 
-// The contract has already been compiled and will be automatically deployed to a local blockchain
-// Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
+/* 
+  The NitroAdjudicator contract has already been compiled and will be automatically deployed to a local blockchain.
+  Import the compilation artifact so we can use the ABI to 'talk' to the deployed contract
+*/
 const {
   NitroAdjudicatorArtifact,
 } = require("@statechannels/nitro-protocol").ContractArtifacts;
-
 const NitroAdjudicator = new ethers.Contract(
   process.env.NITRO_ADJUDICATOR_ADDRESS,
   NitroAdjudicatorArtifact.abi,
@@ -72,6 +76,7 @@ it("Lesson 10: Scrape vital information from a ChallengeRegistered event", async
   /* END TEST SETUP */
   /* BEGIN Lesson 10 proper */
 
+  /* Submit a forceMove transaction, and keep the receipt */
   const receipt = await (
     await NitroAdjudicator.forceMove(
       fixedPart,
@@ -84,9 +89,8 @@ it("Lesson 10: Scrape vital information from a ChallengeRegistered event", async
     )
   ).wait();
 
+  /* Catch ForceMove event */
   const event = receipt.events.pop();
-
-  // Catch ForceMove event
   const {
     channelId: eventChannelId,
     turnNumRecord: eventTurnNumRecord,
