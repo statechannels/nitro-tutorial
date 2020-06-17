@@ -29,7 +29,7 @@ will
 - deploy this bytecode
 - run a `jest` test test for lesson 1 only
 
-Your task is to make this tests pass, and then move on with `yarn tutorial lesson2.test` and so on up to lesson 15. Hopefully, you should learn something about the nitro contracts in the process. This exercise would be very useful for anyone interested in building a state channel wallet that runs on nitro protocol.
+Your task is to make this tests pass, and then move on with `yarn tutorial lesson2.test` and so on up to lesson 16. Hopefully, you should learn something about the nitro contracts in the process. This exercise would be very useful for anyone interested in building a state channel wallet that runs on nitro protocol.
 
 DApp developers may wish to build against our State Channel Wallet API (coming soon), which abstracts most of the complexity away into a much simpler interface.
 
