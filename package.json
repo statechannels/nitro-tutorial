@@ -6,6 +6,9 @@
   "author": "George Knee",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": "^10.16.3"
+  },
   "devDependencies": {
     "@statechannels/devtools": "0.1.1",
     "@statechannels/nitro-protocol": "0.1.1",
