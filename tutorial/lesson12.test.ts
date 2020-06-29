@@ -1,5 +1,6 @@
 /* Import ethereum wallet utilities  */
-import { HashZero } from "ethers/constants";
+import { ethers } from "ethers";
+const { HashZero } = ethers.constants;
 
 /* Import statechannels wallet utilities  */
 import {

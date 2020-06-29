@@ -1,7 +1,7 @@
 /* Import ethereum wallet utilities  */
 import { ethers } from "ethers";
-import { AddressZero, HashZero } from "ethers/constants";
-import { bigNumberify } from "ethers/utils";
+const { bigNumberify } = ethers.utils;
+const { AddressZero, HashZero } = ethers.constants;
 
 /* Import statechannels wallet utilities  */
 import {

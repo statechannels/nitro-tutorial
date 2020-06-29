@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { bigNumberify } from "ethers/utils";
+const { bigNumberify } = ethers.utils;
 import { Channel } from "@statechannels/nitro-protocol";
 
 it("Lesson 4: construct a Channel and compute its id", async () => {

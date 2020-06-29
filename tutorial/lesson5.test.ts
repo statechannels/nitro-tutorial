@@ -1,7 +1,7 @@
 /* Import ethereum wallet utilities  */
 import { ethers } from "ethers";
-import { parseUnits } from "ethers/utils";
-import { HashZero } from "ethers/constants";
+const { parseUnits } = ethers.utils;
+const { HashZero } = ethers.constants;
 
 /* Import statechannels wallet utilities  */
 import { getDepositedEvent } from "@statechannels/nitro-protocol";
