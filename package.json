@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@statechannels/devtools": "^0.1.4",
-    "@statechannels/nitro-protocol": "^0.1.4",
+    "@statechannels/nitro-protocol": "0.1.6",
     "@types/jest": "^25.2.3",
     "@types/node": "^14.0.5",
     "etherlime": "^2.3.3",
