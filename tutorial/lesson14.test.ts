@@ -65,7 +65,7 @@ it("Lesson 14: Call transferAll", async () => {
     participants[i] = wallets[i].address;
   }
   const chainId = "0x1234";
-  const channelNonce = bigNumberify(0).toHexString();
+  const channelNonce = 0;
   const channel: Channel = { chainId, channelNonce, participants };
   const channelId = getChannelId(channel);
   const tx0 = ETHAssetHolder.deposit(channelId, 0, amount, {

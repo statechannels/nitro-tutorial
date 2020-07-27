@@ -19,9 +19,9 @@ index 7b722e5..da5c97e 100644
    expect(eventVariableParts[eventVariableParts.length - 1][1]).toEqual(
      variableParts[variableParts.length - 1].appData
    );
--  expect(bigNumberify(eventFinalizesAt._hex).isZero()).toBe(true); // FIXME
--  // expect(bigNumberify(eventFinalizesAt._hex).gt(0)).toBe(true);
-+  expect(bigNumberify(eventFinalizesAt._hex).gt(0)).toBe(true);
+-  expect(eventFinalizesAt).toEqual(0); // FIXME
+-  // expect(eventFinalizesAt).toBeGreaterThan(0);
++  expect(eventFinalizesAt).toBeGreaterThan(0);
  });
 diff --git a/tutorial/lesson11.test.ts b/tutorial/lesson11.test.ts
 index f4a9916..3bc1772 100644
@@ -164,7 +164,7 @@ index c20c7ea..3bb83d8 100644
    /*
 @@ -23,15 +23,13 @@ it("Lesson 4: construct a Channel and compute its id", async () => {
      */
-   const channelNonce = bigNumberify(0).toHexString();
+   const channelNonce = 0;
  
 -  const channelId = "fixme"; // FIX ME
 -

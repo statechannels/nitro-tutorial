@@ -28,7 +28,7 @@ it("Lesson 1: Form a State with the correct format", async () => {
     :~ how many times have these participants
     already run a channel on this chain?
   */
-  const channelNonce = bigNumberify(0).toHexString();
+  const channelNonce = 0;
 
   /* 
     Define the challengeDuration 

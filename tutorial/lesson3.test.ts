@@ -39,7 +39,7 @@ it("Lesson 3: Support a state with signatures", async () => {
     participants[i] = wallets[i].address;
   }
   const chainId = "0x1234";
-  const channelNonce = bigNumberify(0).toHexString();
+  const channelNonce = 0;
   const channel: Channel = { chainId, channelNonce, participants };
 
   /* Construct an array of 3 States */

@@ -29,7 +29,7 @@ it("Lesson 2: Conform to an on chain validTransition function", async () => {
       ethers.Wallet.createRandom().address,
     ],
     chainId: "0x1234",
-    channelNonce: "0x0",
+    channelNonce: 0,
   };
 
   /* Construct a state */
