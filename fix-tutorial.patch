@@ -1,0 +1,247 @@
+diff --git a/tutorial/lesson1.test.ts b/tutorial/lesson1.test.ts
+index a2693c2..9d51731 100644
+--- a/tutorial/lesson1.test.ts
++++ b/tutorial/lesson1.test.ts
+@@ -52,7 +52,7 @@ it("Lesson 1: Form a State with the correct format", async () => {
+   /* Putting it all together */
+   const state: State = {
+     turnNum: 0,
+-    isFinal: true, // FIXME
++    isFinal: false,
+     channel,
+     challengeDuration,
+     outcome,
+diff --git a/tutorial/lesson10.test.ts b/tutorial/lesson10.test.ts
+index 7b722e5..da5c97e 100644
+--- a/tutorial/lesson10.test.ts
++++ b/tutorial/lesson10.test.ts
+@@ -117,6 +117,5 @@ it("Lesson 10: Extract information from a ChallengeRegistered event", async () =
+   expect(eventVariableParts[eventVariableParts.length - 1][1]).toEqual(
+     variableParts[variableParts.length - 1].appData
+   );
+-  expect(bigNumberify(eventFinalizesAt._hex).isZero()).toBe(true); // FIXME
+-  // expect(bigNumberify(eventFinalizesAt._hex).gt(0)).toBe(true);
++  expect(bigNumberify(eventFinalizesAt._hex).gt(0)).toBe(true);
+ });
+diff --git a/tutorial/lesson11.test.ts b/tutorial/lesson11.test.ts
+index f4a9916..3bc1772 100644
+--- a/tutorial/lesson11.test.ts
++++ b/tutorial/lesson11.test.ts
+@@ -18,7 +18,7 @@ it("Lesson 11: Construct an allocation Outcome", async () => {
+     whose address is stored in process.env
+   */
+   const assetOutcome: AllocationAssetOutcome = {
+-    assetHolderAddress: AddressZero, // FIXME
++    assetHolderAddress: process.env.ETH_ASSET_HOLDER_ADDRESS,
+     allocationItems: [
+       { destination: convertAddressToBytes32(AddressZero), amount: "0x03" },
+       // other payouts go here
+diff --git a/tutorial/lesson12.test.ts b/tutorial/lesson12.test.ts
+index 606d06a..4477685 100644
+--- a/tutorial/lesson12.test.ts
++++ b/tutorial/lesson12.test.ts
+@@ -19,8 +19,8 @@ it("Lesson 12: Construct a guarantee Outcome", async () => {
+     guarantee: {
+       targetChannelId: HashZero,
+       destinations: [
+-        "0x000000000000000000000000000000000000000000000000000000000000000a", // FIXME
+-        "0x000000000000000000000000000000000000000000000000000000000000000b", // FIXME
++        "0x000000000000000000000000000000000000000000000000000000000000000b",
++        "0x000000000000000000000000000000000000000000000000000000000000000a",
+       ],
+     },
+   };
+diff --git a/tutorial/lesson13.test.ts b/tutorial/lesson13.test.ts
+index e338a06..c60a062 100644
+--- a/tutorial/lesson13.test.ts
++++ b/tutorial/lesson13.test.ts
+@@ -91,8 +91,7 @@ it("Lesson 13: Call pushOutcome", async () => {
+   const challengerAddress = AddressZero; // Reset in a happy conclude
+   const outcomeBytes = encodeOutcome(state.outcome);
+ 
+-  const turnNumRecord = largestTurnNum; // FIXME
+-  // const turnNumRecord = 0; // Always 0 for a happy conclude
++  const turnNumRecord = 0; // Always 0 for a happy conclude
+ 
+   const tx1 = NitroAdjudicator.pushOutcome(
+     channelId,
+diff --git a/tutorial/lesson14.test.ts b/tutorial/lesson14.test.ts
+index 7467000..a0f5e21 100644
+--- a/tutorial/lesson14.test.ts
++++ b/tutorial/lesson14.test.ts
+@@ -14,6 +14,7 @@ import {
+   encodeOutcome,
+   AllocationAssetOutcome,
+   hashAppPart,
++  encodeAllocation,
+ } from "@statechannels/nitro-protocol";
+ 
+ /* Set up an ethereum provider connected to our local blockchain */
+@@ -117,8 +118,7 @@ it("Lesson 14: Call transferAll", async () => {
+   /* Submit a transferAll transaction */
+   const tx3 = ETHAssetHolder.transferAll(
+     channelId,
+-    HashZero // FIXME
+-    // encodeAllocation(assetOutcome.allocationItems)
++    encodeAllocation(assetOutcome.allocationItems)
+   );
+ 
+   /* 
+diff --git a/tutorial/lesson15.test.ts b/tutorial/lesson15.test.ts
+index e599bdd..5382c38 100644
+--- a/tutorial/lesson15.test.ts
++++ b/tutorial/lesson15.test.ts
+@@ -181,18 +181,11 @@ it("Lesson 15: Call claimAll", async () => {
+   /*
+     Submit claimAll transaction
+   */
+-
+-  // FIXME
+   const tx5 = ETHAssetHolder.claimAll(
+     guarantorChannelId,
+-    encodeAllocation(assetOutcomeForTheTargetChannel.allocationItems),
+-    encodeGuarantee(assetOutcomeForTheGuarantorChannel.guarantee)
++    encodeGuarantee(assetOutcomeForTheGuarantorChannel.guarantee),
++    encodeAllocation(assetOutcomeForTheTargetChannel.allocationItems)
+   );
+-  // const tx5 = ETHAssetHolder.claimAll(
+-  //   guarantorChannelId,
+-  //   encodeGuarantee(assetOutcomeForTheGuarantorChannel.guarantee),
+-  //   encodeAllocation(assetOutcomeForTheTargetChannel.allocationItems)
+-  // );
+ 
+   /* 
+     Check that an AssetTransferred event was emitted.
+diff --git a/tutorial/lesson16.test.ts b/tutorial/lesson16.test.ts
+index 31fc4e9..b4af597 100644
+--- a/tutorial/lesson16.test.ts
++++ b/tutorial/lesson16.test.ts
+@@ -84,7 +84,7 @@ it("Lesson 16: Ledger funding", async () => {
+   */
+   let signatures;
+   signatures = [
+-    signState(sixEachStatePreFS, hubSigningKey).signature, // FIXME
++    signState(sixEachStatePreFS, mySigningKey).signature,
+     signState(sixEachStatePreFS, hubSigningKey).signature,
+   ];
+   expect(JSON.stringify(signatures)).toEqual(
+diff --git a/tutorial/lesson2.test.ts b/tutorial/lesson2.test.ts
+index be6aa2e..f423102 100644
+--- a/tutorial/lesson2.test.ts
++++ b/tutorial/lesson2.test.ts
+@@ -44,7 +44,7 @@ it("Lesson 2: Conform to an on chain validTransition function", async () => {
+   };
+ 
+   /* Construct another state */
+-  const toState: State = { ...fromState, turnNum: 1, appData: "0x1" }; // FIXME
++  const toState: State = { ...fromState, turnNum: 1 };
+ 
+   /* 
+     Check validity of transition from one state to the other
+diff --git a/tutorial/lesson3.test.ts b/tutorial/lesson3.test.ts
+index 5ebc528..1249b24 100644
+--- a/tutorial/lesson3.test.ts
++++ b/tutorial/lesson3.test.ts
+@@ -61,7 +61,6 @@ it("Lesson 3: Support a state with signatures", async () => {
+   /* Sign the states */
+   const whoSignedWhat = [0, 1, 2];
+   const sigs = await signStates(states, wallets, whoSignedWhat);
+-  sigs.reverse(); // FIXME
+ 
+   /*
+    * Use the checkpoint method to test our signatures
+diff --git a/tutorial/lesson4.test.ts b/tutorial/lesson4.test.ts
+index c20c7ea..3bb83d8 100644
+--- a/tutorial/lesson4.test.ts
++++ b/tutorial/lesson4.test.ts
+@@ -1,6 +1,6 @@
+ import { ethers } from "ethers";
+ const { bigNumberify } = ethers.utils;
+-import { Channel } from "@statechannels/nitro-protocol";
++import { Channel, getChannelId } from "@statechannels/nitro-protocol";
+ 
+ it("Lesson 4: construct a Channel and compute its id", async () => {
+   /*
+@@ -23,15 +23,13 @@ it("Lesson 4: construct a Channel and compute its id", async () => {
+     */
+   const channelNonce = bigNumberify(0).toHexString();
+ 
+-  const channelId = "fixme"; // FIX ME
+-
+   /* 
+       Uncomment the lines below to use the imported helper function to compute the channel id.
+       Feel free to take a look at the implementation of that helper 
+     */
+ 
+   const channel: Channel = { chainId, channelNonce, participants };
+-  // const channelId = getChannelId(channel);
++  const channelId = getChannelId(channel);
+ 
+   /* 
+       Expectations around the format of the channel Id:
+diff --git a/tutorial/lesson5.test.ts b/tutorial/lesson5.test.ts
+index 4251eb6..5fe8f86 100644
+--- a/tutorial/lesson5.test.ts
++++ b/tutorial/lesson5.test.ts
+@@ -40,7 +40,7 @@ it("Lesson 5: depositing into the ETH asset holder", async () => {
+       Attempt to deposit 1 wei against the channel id we created.
+       Inspect the error message in the console for a hint about the bug on the next line 
+   */
+-  const expectedHeld = 1; // FIXME
++  const expectedHeld = 0;
+   const tx0 = ETHAssetHolder.deposit(destination, expectedHeld, amount, {
+     value: amount,
+   });
+diff --git a/tutorial/lesson6.test.ts b/tutorial/lesson6.test.ts
+index b7c9fcf..d235d22 100644
+--- a/tutorial/lesson6.test.ts
++++ b/tutorial/lesson6.test.ts
+@@ -44,7 +44,7 @@ it("Lesson 6: Conclude a channel (happy)", async () => {
+   const channel: Channel = { chainId, channelNonce, participants };
+   const largestTurnNum = 4;
+   const state: State = {
+-    isFinal: false, // FIXME
++    isFinal: true,
+     channel,
+     outcome: [],
+     appDefinition: AddressZero,
+diff --git a/tutorial/lesson7.test.ts b/tutorial/lesson7.test.ts
+index 9206fff..7906917 100644
+--- a/tutorial/lesson7.test.ts
++++ b/tutorial/lesson7.test.ts
+@@ -44,8 +44,7 @@ it("Lesson 7: Register a challenge using forceMove", async () => {
+   const channel: Channel = { chainId, channelNonce, participants };
+ 
+   /* Choose a challenger */
+-  const challenger = ethers.Wallet.createRandom(); // FIXME
+-  // const challenger = wallets[0];
++  const challenger = wallets[0];
+ 
+   /* Construct a progression of states */
+   const largestTurnNum = 8;
+diff --git a/tutorial/lesson8.test.ts b/tutorial/lesson8.test.ts
+index f3f4d9e..19bfd0d 100644
+--- a/tutorial/lesson8.test.ts
++++ b/tutorial/lesson8.test.ts
+@@ -89,7 +89,7 @@ it("Lesson 8: Clear a challenge using checkpoint", async () => {
+   /* BEGIN Lesson 8 proper */
+ 
+   /* Form a progression of states */
+-  const numRounds = 2; // FIXME
++  const numRounds = 3;
+   largestTurnNum = 3 * numRounds;
+   appDatas = [largestTurnNum - 2, largestTurnNum - 1, largestTurnNum];
+   states = appDatas.map((data, idx) => ({
+diff --git a/tutorial/lesson9.test.ts b/tutorial/lesson9.test.ts
+index a13bd39..c3a096b 100644
+--- a/tutorial/lesson9.test.ts
++++ b/tutorial/lesson9.test.ts
+@@ -124,7 +124,7 @@ it("Lesson 9: Clear a challenge using respond", async () => {
+   */
+   const expectedChannelStorageHash = channelDataToChannelStorageHash({
+     turnNumRecord: largestTurnNum,
+-    finalizesAt: 0x1, // FIXME
++    finalizesAt: 0,
+   });
+ 
+   /* 

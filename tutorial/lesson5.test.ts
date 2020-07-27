@@ -4,7 +4,10 @@ const { parseUnits } = ethers.utils;
 const { HashZero } = ethers.constants;
 
 /* Import statechannels wallet utilities  */
-import { getDepositedEvent } from "@statechannels/nitro-protocol";
+import {
+  getDepositedEvent,
+  randomChannelId,
+} from "@statechannels/nitro-protocol";
 
 /* Set up an ethereum provider connected to our local blockchain */
 const provider = new ethers.providers.JsonRpcProvider(
@@ -27,11 +30,11 @@ const ETHAssetHolder = new ethers.Contract(
 it("Lesson 5: depositing into the ETH asset holder", async () => {
   /*
       Get an appropriate representation of 1 wei, and
-      use ethers.HashZero = 0x000...0 as a dummy channelId.
+      use a random channelId.
       WARNING: don't do this in the wild: you won't be able to recover these funds.
   */
   const amount = parseUnits("1", "wei");
-  const destination = HashZero;
+  const destination = randomChannelId();
 
   /*
       Attempt to deposit 1 wei against the channel id we created.
