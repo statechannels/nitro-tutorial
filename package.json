@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "engines": {
-    "node": "^12.16.3"
+    "node": "~12.16.0"
   },
   "devDependencies": {
     "@statechannels/devtools": "^0.1.4",
@@ -21,7 +21,8 @@
     "ts-jest": "^26.0.0"
   },
   "resolutions": {
-    "scrypt": "https://registry.yarnpkg.com/@favware/skip-dependency/-/skip-dependency-1.0.2.tgz"
+    "scrypt": "https://registry.yarnpkg.com/@favware/skip-dependency/-/skip-dependency-1.0.2.tgz",
+    "websocket": "1.0.30"
   },
   "scripts": {
     "contract:compile": "node ./bin/compile.js",
