@@ -26,6 +26,6 @@
   },
   "scripts": {
     "contract:compile": "node ./bin/compile.js",
-    "tutorial": "jest -c ./jest/jest.tutorial.config.js --watch --onlyFailures --runInBand"
+    "tutorial": "jest -c ./jest/jest.tutorial.config.js --runInBand"
   }
 }
