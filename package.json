@@ -26,6 +26,7 @@
   },
   "scripts": {
     "contract:compile": "node ./bin/compile.js",
-    "tutorial": "jest -c ./jest/jest.tutorial.config.js --runInBand"
+    "tutorial": "jest -c ./jest/jest.tutorial.config.js --runInBand",
+    "fix-and-test": "git apply fix-tutorial.patch && yarn tutorial && git apply -R fix-tutorial.patch"
   }
 }
