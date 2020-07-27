@@ -40,7 +40,7 @@ it("Lesson 7: Register a challenge using forceMove", async () => {
     participants[i] = wallets[i].address;
   }
   const chainId = "0x1234";
-  const channelNonce = bigNumberify(0).toHexString();
+  const channelNonce = 0;
   const channel: Channel = { chainId, channelNonce, participants };
 
   /* Choose a challenger */

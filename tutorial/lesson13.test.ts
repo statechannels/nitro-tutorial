@@ -44,7 +44,7 @@ it("Lesson 13: Call pushOutcome", async () => {
     participants[i] = wallets[i].address;
   }
   const chainId = "0x1234";
-  const channelNonce = bigNumberify(0).toHexString();
+  const channelNonce = 0;
   const channel: Channel = { chainId, channelNonce, participants };
   const state: State = {
     isFinal: true,

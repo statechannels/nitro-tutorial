@@ -21,7 +21,7 @@ it("Lesson 4: construct a Channel and compute its id", async () => {
       It should be unique for a fixed set of participants and chainId
       It should be formatted as a hex string 
     */
-  const channelNonce = bigNumberify(0).toHexString();
+  const channelNonce = 0;
 
   const channelId = "fixme"; // FIX ME
 

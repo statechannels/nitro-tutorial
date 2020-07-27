@@ -76,7 +76,7 @@ it("Lesson 15: Call claimAll", async () => {
     participants[i] = wallets[i].address;
   }
   const chainId = "0x1234";
-  const channelNonce = bigNumberify(0).toHexString();
+  const channelNonce = 0;
   const targetChannel: Channel = { chainId, channelNonce, participants };
   const targetChannelId = getChannelId(targetChannel);
   const state: State = {

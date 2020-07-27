@@ -48,7 +48,7 @@ it("Lesson 8: Clear a challenge using checkpoint", async () => {
   }
   const chainId = "0x1234";
   const challengeDuration = 1e12; // a long time in the future
-  const channelNonce = bigNumberify(0).toHexString();
+  const channelNonce = 0;
   const channel: Channel = { chainId, channelNonce, participants };
   const channelId = getChannelId(channel);
   let appDatas = [0, 1, 2];

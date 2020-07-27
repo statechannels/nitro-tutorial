@@ -45,7 +45,7 @@ it("Lesson 16: Ledger funding", async () => {
   const chainId = "0x1234";
   const ledgerChannel: Channel = {
     chainId,
-    channelNonce: bigNumberify(0).toHexString(),
+    channelNonce: 0,
     participants,
   };
   const ledgerChannelId = getChannelId(ledgerChannel);
@@ -126,7 +126,7 @@ it("Lesson 16: Ledger funding", async () => {
   */
   const applicationChannel1: Channel = {
     chainId,
-    channelNonce: bigNumberify(1).toHexString(),
+    channelNonce: 1,
     participants,
   };
   const applicationChannel1Id = getChannelId(applicationChannel1);
