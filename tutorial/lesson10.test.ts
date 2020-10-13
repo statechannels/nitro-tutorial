@@ -1,6 +1,6 @@
 /* Import ethereum wallet utilities  */
 import { ethers } from "ethers";
-const { bigNumberify, hexlify } = ethers.utils;
+const { hexlify } = ethers.utils;
 const { HashZero } = ethers.constants;
 
 /* Import statechannels wallet utilities  */

@@ -1,6 +1,6 @@
 /* Import ethereum wallet utilities  */
-import { ethers } from "ethers";
-const { bigNumberify, hexZeroPad } = ethers.utils;
+import { BigNumber, ethers } from "ethers";
+const { hexZeroPad } = ethers.utils;
 const { AddressZero, HashZero } = ethers.constants;
 
 /* Import statechannels wallet utilities  */
@@ -136,5 +136,7 @@ it("Lesson 14: Call transferAll", async () => {
     },
   ]);
 
-  expect(bigNumberify(await provider.getBalance(EOA)).eq(bigNumberify(amount)));
+  expect(
+    BigNumber.from(await provider.getBalance(EOA)).eq(BigNumber.from(amount))
+  );
 });

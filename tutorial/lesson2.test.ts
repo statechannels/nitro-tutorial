@@ -40,7 +40,7 @@ it("Lesson 2: Conform to an on chain validTransition function", async () => {
     isFinal: false,
     challengeDuration: 0x0,
     appDefinition: process.env.TRIVIAL_APP_ADDRESS,
-    appData: "0x0",
+    appData: "0x00",
   };
 
   /* Construct another state */
