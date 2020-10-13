@@ -1,6 +1,6 @@
 /* Import ethereum wallet utilities  */
 import { ethers } from "ethers";
-const { AddressZero } = ethers.constants;
+const { AddressZero, HashZero } = ethers.constants;
 
 /* Import statechannels wallet utilities  */
 import {
@@ -8,7 +8,6 @@ import {
   Outcome,
   encodeOutcome,
   decodeOutcome,
-  convertAddressToBytes32,
 } from "@statechannels/nitro-protocol";
 
 it("Lesson 11: Construct an allocation Outcome", async () => {
@@ -20,7 +19,7 @@ it("Lesson 11: Construct an allocation Outcome", async () => {
   const assetOutcome: AllocationAssetOutcome = {
     assetHolderAddress: AddressZero, // FIXME
     allocationItems: [
-      { destination: convertAddressToBytes32(AddressZero), amount: "0x03" },
+      { destination: HashZero, amount: "0x03" },
       // other payouts go here
     ],
   };
