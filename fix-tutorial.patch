@@ -24,17 +24,17 @@ index bea59b4..9930705 100644
 +  expect(eventFinalizesAt).toBeGreaterThan(0);
  });
 diff --git a/tutorial/lesson11.test.ts b/tutorial/lesson11.test.ts
-index f4a9916..3bc1772 100644
+index d897090..b636c55 100644
 --- a/tutorial/lesson11.test.ts
 +++ b/tutorial/lesson11.test.ts
-@@ -18,7 +18,7 @@ it("Lesson 11: Construct an allocation Outcome", async () => {
+@@ -17,7 +17,7 @@ it("Lesson 11: Construct an allocation Outcome", async () => {
      whose address is stored in process.env
    */
    const assetOutcome: AllocationAssetOutcome = {
 -    assetHolderAddress: AddressZero, // FIXME
 +    assetHolderAddress: process.env.ETH_ASSET_HOLDER_ADDRESS,
      allocationItems: [
-       { destination: convertAddressToBytes32(AddressZero), amount: "0x03" },
+       { destination: HashZero, amount: "0x03" },
        // other payouts go here
 diff --git a/tutorial/lesson12.test.ts b/tutorial/lesson12.test.ts
 index 606d06a..4477685 100644
@@ -126,7 +126,7 @@ index 5f66a51..be5d282 100644
    ];
    expect(JSON.stringify(signatures)).toEqual(
 diff --git a/tutorial/lesson2.test.ts b/tutorial/lesson2.test.ts
-index cc1cdfa..32fb259 100644
+index 91f1e89..40b62d6 100644
 --- a/tutorial/lesson2.test.ts
 +++ b/tutorial/lesson2.test.ts
 @@ -44,7 +44,7 @@ it("Lesson 2: Conform to an on chain validTransition function", async () => {
