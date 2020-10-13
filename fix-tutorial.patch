@@ -1,8 +1,8 @@
 diff --git a/tutorial/lesson1.test.ts b/tutorial/lesson1.test.ts
-index a2693c2..9d51731 100644
+index 21929c6..57a6d5f 100644
 --- a/tutorial/lesson1.test.ts
 +++ b/tutorial/lesson1.test.ts
-@@ -52,7 +52,7 @@ it("Lesson 1: Form a State with the correct format", async () => {
+@@ -51,7 +51,7 @@ it("Lesson 1: Form a State with the correct format", async () => {
    /* Putting it all together */
    const state: State = {
      turnNum: 0,
@@ -12,7 +12,7 @@ index a2693c2..9d51731 100644
      challengeDuration,
      outcome,
 diff --git a/tutorial/lesson10.test.ts b/tutorial/lesson10.test.ts
-index 7b722e5..da5c97e 100644
+index bea59b4..9930705 100644
 --- a/tutorial/lesson10.test.ts
 +++ b/tutorial/lesson10.test.ts
 @@ -117,6 +117,5 @@ it("Lesson 10: Extract information from a ChallengeRegistered event", async () =
@@ -52,10 +52,10 @@ index 606d06a..4477685 100644
      },
    };
 diff --git a/tutorial/lesson13.test.ts b/tutorial/lesson13.test.ts
-index e338a06..c60a062 100644
+index 11d5cf5..434828f 100644
 --- a/tutorial/lesson13.test.ts
 +++ b/tutorial/lesson13.test.ts
-@@ -91,8 +91,7 @@ it("Lesson 13: Call pushOutcome", async () => {
+@@ -90,8 +90,7 @@ it("Lesson 13: Call pushOutcome", async () => {
    const challengerAddress = AddressZero; // Reset in a happy conclude
    const outcomeBytes = encodeOutcome(state.outcome);
  
@@ -66,7 +66,7 @@ index e338a06..c60a062 100644
    const tx1 = NitroAdjudicator.pushOutcome(
      channelId,
 diff --git a/tutorial/lesson14.test.ts b/tutorial/lesson14.test.ts
-index 7467000..a0f5e21 100644
+index 8e4405f..0433ff9 100644
 --- a/tutorial/lesson14.test.ts
 +++ b/tutorial/lesson14.test.ts
 @@ -14,6 +14,7 @@ import {
@@ -88,7 +88,7 @@ index 7467000..a0f5e21 100644
  
    /* 
 diff --git a/tutorial/lesson15.test.ts b/tutorial/lesson15.test.ts
-index e599bdd..5382c38 100644
+index 64d939e..99f671d 100644
 --- a/tutorial/lesson15.test.ts
 +++ b/tutorial/lesson15.test.ts
 @@ -181,18 +181,11 @@ it("Lesson 15: Call claimAll", async () => {
@@ -113,7 +113,7 @@ index e599bdd..5382c38 100644
    /* 
      Check that an AssetTransferred event was emitted.
 diff --git a/tutorial/lesson16.test.ts b/tutorial/lesson16.test.ts
-index 31fc4e9..b4af597 100644
+index 5f66a51..be5d282 100644
 --- a/tutorial/lesson16.test.ts
 +++ b/tutorial/lesson16.test.ts
 @@ -84,7 +84,7 @@ it("Lesson 16: Ledger funding", async () => {
@@ -126,7 +126,7 @@ index 31fc4e9..b4af597 100644
    ];
    expect(JSON.stringify(signatures)).toEqual(
 diff --git a/tutorial/lesson2.test.ts b/tutorial/lesson2.test.ts
-index be6aa2e..f423102 100644
+index cc1cdfa..32fb259 100644
 --- a/tutorial/lesson2.test.ts
 +++ b/tutorial/lesson2.test.ts
 @@ -44,7 +44,7 @@ it("Lesson 2: Conform to an on chain validTransition function", async () => {
@@ -139,10 +139,10 @@ index be6aa2e..f423102 100644
    /* 
      Check validity of transition from one state to the other
 diff --git a/tutorial/lesson3.test.ts b/tutorial/lesson3.test.ts
-index 5ebc528..1249b24 100644
+index 2c7e923..161d447 100644
 --- a/tutorial/lesson3.test.ts
 +++ b/tutorial/lesson3.test.ts
-@@ -61,7 +61,6 @@ it("Lesson 3: Support a state with signatures", async () => {
+@@ -60,7 +60,6 @@ it("Lesson 3: Support a state with signatures", async () => {
    /* Sign the states */
    const whoSignedWhat = [0, 1, 2];
    const sigs = await signStates(states, wallets, whoSignedWhat);
@@ -151,18 +151,17 @@ index 5ebc528..1249b24 100644
    /*
     * Use the checkpoint method to test our signatures
 diff --git a/tutorial/lesson4.test.ts b/tutorial/lesson4.test.ts
-index c20c7ea..3bb83d8 100644
+index 3101496..1c2fa75 100644
 --- a/tutorial/lesson4.test.ts
 +++ b/tutorial/lesson4.test.ts
-@@ -1,6 +1,6 @@
+@@ -1,5 +1,5 @@
  import { ethers } from "ethers";
- const { bigNumberify } = ethers.utils;
 -import { Channel } from "@statechannels/nitro-protocol";
 +import { Channel, getChannelId } from "@statechannels/nitro-protocol";
  
  it("Lesson 4: construct a Channel and compute its id", async () => {
    /*
-@@ -23,15 +23,13 @@ it("Lesson 4: construct a Channel and compute its id", async () => {
+@@ -22,15 +22,13 @@ it("Lesson 4: construct a Channel and compute its id", async () => {
      */
    const channelNonce = 0;
  
@@ -193,10 +192,10 @@ index 4251eb6..5fe8f86 100644
      value: amount,
    });
 diff --git a/tutorial/lesson6.test.ts b/tutorial/lesson6.test.ts
-index b7c9fcf..d235d22 100644
+index 085c4ff..784989b 100644
 --- a/tutorial/lesson6.test.ts
 +++ b/tutorial/lesson6.test.ts
-@@ -44,7 +44,7 @@ it("Lesson 6: Conclude a channel (happy)", async () => {
+@@ -43,7 +43,7 @@ it("Lesson 6: Conclude a channel (happy)", async () => {
    const channel: Channel = { chainId, channelNonce, participants };
    const largestTurnNum = 4;
    const state: State = {
@@ -206,10 +205,10 @@ index b7c9fcf..d235d22 100644
      outcome: [],
      appDefinition: AddressZero,
 diff --git a/tutorial/lesson7.test.ts b/tutorial/lesson7.test.ts
-index 9206fff..7906917 100644
+index bb2459c..0eb9c00 100644
 --- a/tutorial/lesson7.test.ts
 +++ b/tutorial/lesson7.test.ts
-@@ -44,8 +44,7 @@ it("Lesson 7: Register a challenge using forceMove", async () => {
+@@ -43,8 +43,7 @@ it("Lesson 7: Register a challenge using forceMove", async () => {
    const channel: Channel = { chainId, channelNonce, participants };
  
    /* Choose a challenger */
@@ -220,10 +219,10 @@ index 9206fff..7906917 100644
    /* Construct a progression of states */
    const largestTurnNum = 8;
 diff --git a/tutorial/lesson8.test.ts b/tutorial/lesson8.test.ts
-index f3f4d9e..19bfd0d 100644
+index 8e9e352..10d9d86 100644
 --- a/tutorial/lesson8.test.ts
 +++ b/tutorial/lesson8.test.ts
-@@ -89,7 +89,7 @@ it("Lesson 8: Clear a challenge using checkpoint", async () => {
+@@ -88,7 +88,7 @@ it("Lesson 8: Clear a challenge using checkpoint", async () => {
    /* BEGIN Lesson 8 proper */
  
    /* Form a progression of states */
@@ -233,10 +232,10 @@ index f3f4d9e..19bfd0d 100644
    appDatas = [largestTurnNum - 2, largestTurnNum - 1, largestTurnNum];
    states = appDatas.map((data, idx) => ({
 diff --git a/tutorial/lesson9.test.ts b/tutorial/lesson9.test.ts
-index a13bd39..c3a096b 100644
+index ad7ec7c..1e60ddc 100644
 --- a/tutorial/lesson9.test.ts
 +++ b/tutorial/lesson9.test.ts
-@@ -124,7 +124,7 @@ it("Lesson 9: Clear a challenge using respond", async () => {
+@@ -123,7 +123,7 @@ it("Lesson 9: Clear a challenge using respond", async () => {
    */
    const expectedChannelStorageHash = channelDataToChannelStorageHash({
      turnNumRecord: largestTurnNum,
