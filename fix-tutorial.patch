@@ -113,7 +113,7 @@ index 64d939e..99f671d 100644
    /* 
      Check that an AssetTransferred event was emitted.
 diff --git a/tutorial/lesson16.test.ts b/tutorial/lesson16.test.ts
-index 5f66a51..be5d282 100644
+index b130cdb..e7258eb 100644
 --- a/tutorial/lesson16.test.ts
 +++ b/tutorial/lesson16.test.ts
 @@ -84,7 +84,7 @@ it("Lesson 16: Ledger funding", async () => {
