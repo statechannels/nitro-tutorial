@@ -6,7 +6,8 @@ Clone the repository and `cd` into the new directory.
 
 ### Installing dependencies
 
-**Make sure you have Yarn v1.17.3 installed**. For easy management of specific Yarn versions, we recommend using [Yarn Version Manager (YVM)](https://github.com/tophat/yvm).
+- **Make sure you have `Node v12.16` installed**. For easy management of specific Node versions, we recommend using Node Version Manager ([mac / linux](https://github.com/nvm-sh/nvm)) ([windows](https://github.com/coreybutler/nvm-windows)).
+- **Make sure you have `Yarn v1.17.3` installed**. For easy management of specific Yarn versions, we recommend using [Yarn Version Manager (yvm)](https://github.com/tophat/yvm) (mac / linux). Under windows, install the correct yarn version while running in your node 12.16 nvm environment.
 
 To install the dependencies:
 
@@ -29,7 +30,7 @@ will
 - deploy this bytecode
 - run a `jest` test test for lesson 1 only
 
-Your task is to make this tests pass, and then move on with `yarn tutorial lesson2.test` and so on up to lesson 16. Hopefully, you should learn something about the nitro contracts in the process. This exercise would be very useful for anyone interested in building a state channel wallet that runs on nitro protocol.
+Your task is to make this test pass, and then move on with `yarn tutorial lesson2.test` and so on up to lesson 16. Hopefully, you should learn something about the nitro contracts in the process. This exercise would be very useful for anyone interested in building a state channel wallet that runs on nitro protocol.
 
 DApp developers may wish to build against our State Channel Wallet API (coming soon), which abstracts most of the complexity away into a much simpler interface.
 
