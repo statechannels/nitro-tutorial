@@ -6,7 +6,8 @@ Clone the repository and `cd` into the new directory.
 
 ### Installing dependencies
 
-**Make sure you have Yarn v1.17.3 installed**. For easy management of specific Yarn versions, we recommend using [Yarn Version Manager (YVM)](https://github.com/tophat/yvm).
+- **Make sure you have `Node v12.16` installed**. For easy management of specific Node versions, we recommend using Node Version Manager ([mac / linux](https://github.com/nvm-sh/nvm)) ([windows](https://github.com/coreybutler/nvm-windows)).
+- **Make sure you have `Yarn v1.17.3` installed**. For easy management of specific Yarn versions, we recommend using [Yarn Version Manager (yvm)](https://github.com/tophat/yvm) (mac / linux). Under windows, install the correct yarn version while running in your node 12.16 nvm environment.
 
 To install the dependencies:
 
